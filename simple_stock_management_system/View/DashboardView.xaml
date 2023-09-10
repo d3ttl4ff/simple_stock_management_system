@@ -219,7 +219,7 @@
                                 Style="{StaticResource MainButton}"
                                 Click="BtnHome_OnClick">
                             <StackPanel Orientation="Vertical" Margin="10, 10">
-                                <Image Source="/Images/warehouse-blue.png" 
+                                <Image Source="/Images/home.png" 
                                        Width="20" Height="20"
                                        RenderOptions.BitmapScalingMode="HighQuality"/>
                             </StackPanel>

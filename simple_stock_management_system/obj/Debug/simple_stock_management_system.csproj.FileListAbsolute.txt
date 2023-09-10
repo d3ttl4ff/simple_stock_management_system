@@ -71,3 +71,4 @@ C:\Users\itzluminara\Desktop\simple_stock_management_system\simple_stock_managem
 C:\Users\itzluminara\Desktop\simple_stock_management_system\simple_stock_management_system\bin\Debug\Images\warehouse-blue.png
 C:\Users\itzluminara\Desktop\simple_stock_management_system\simple_stock_management_system\obj\Debug\View\DashboardView.g.cs
 C:\Users\itzluminara\Desktop\simple_stock_management_system\simple_stock_management_system\obj\Debug\View\DashboardView.baml
+C:\Users\itzluminara\Desktop\simple_stock_management_system\simple_stock_management_system\bin\Debug\Images\home.png

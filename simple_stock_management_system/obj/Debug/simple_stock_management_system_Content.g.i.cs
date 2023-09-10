@@ -10,6 +10,7 @@
 
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/cart-white.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/dots2.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/home.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/inventory.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/key.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/key_white.png")]
