@@ -173,6 +173,12 @@
         <None Include="packages.config" />
     </ItemGroup>
     <ItemGroup>
+      <Content Include="Images\addItem.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Images\barcode.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
       <Content Include="Images\cart-white.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
@@ -203,7 +209,13 @@
       <Content Include="Images\parcel-white.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
+      <Content Include="Images\product.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
       <Content Include="Images\stockflowlogo.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Images\time.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <Content Include="Images\user.png">

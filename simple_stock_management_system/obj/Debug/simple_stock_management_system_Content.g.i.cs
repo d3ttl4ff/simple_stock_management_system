@@ -8,6 +8,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/additem.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/barcode.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/cart-white.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/dots2.jpg")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/home.png")]
@@ -18,7 +20,9 @@
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/list-white.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/parcel-blue.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/parcel-white.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/product.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/stockflowlogo.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/time.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/user.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/user_white.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/warehouse-blue.png")]
