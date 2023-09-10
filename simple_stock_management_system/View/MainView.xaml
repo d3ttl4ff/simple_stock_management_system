@@ -221,7 +221,8 @@
                         <Button Grid.Row="0" Grid.Column="2" 
                                 x:Name="BtnLog"
                                 Command="{Binding LogCommand}"
-                                Style="{StaticResource MainButton}">
+                                Style="{StaticResource MainButton}"
+                                Click="btnLog_Click">
                             <StackPanel Orientation="Vertical" Margin="20, 10">
                                 <Image Source="/Images/list-blue.png" 
                                        Width="30" Height="30"
@@ -238,7 +239,8 @@
                         <Button Grid.Row="0" Grid.Column="4" 
                                 x:Name="BtnStock"
                                 Command="{Binding StockCommand}"
-                                Style="{StaticResource MainButton}">
+                                Style="{StaticResource MainButton}"
+                                Click="btnStock_Click">
                             <StackPanel Orientation="Vertical" Margin="20, 10">
                                 <Image Source="/Images/warehouse-blue.png" 
                                        Width="30" Height="30"

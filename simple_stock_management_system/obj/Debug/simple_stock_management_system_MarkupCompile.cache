@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\itzluminara\Desktop\simple_stock_management_system\simple_stock_management_system\App.xaml
-51628009739
+7-1306572255
 1540620809
-151019619502
+1757404386
 30-55819154
-CustomControls\BindablePasswordBox.xaml;MainWindow.xaml;View\DashboardView.xaml;View\LoginView.xaml;View\MainView.xaml;
+CustomControls\BindablePasswordBox.xaml;MainWindow.xaml;View\DashboardView.xaml;View\LoginView.xaml;View\LogView.xaml;View\MainView.xaml;View\StockView.xaml;
 
 False
 

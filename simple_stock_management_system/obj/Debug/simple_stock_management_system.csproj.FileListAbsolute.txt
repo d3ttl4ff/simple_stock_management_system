@@ -72,3 +72,7 @@ C:\Users\itzluminara\Desktop\simple_stock_management_system\simple_stock_managem
 C:\Users\itzluminara\Desktop\simple_stock_management_system\simple_stock_management_system\obj\Debug\View\DashboardView.g.cs
 C:\Users\itzluminara\Desktop\simple_stock_management_system\simple_stock_management_system\obj\Debug\View\DashboardView.baml
 C:\Users\itzluminara\Desktop\simple_stock_management_system\simple_stock_management_system\bin\Debug\Images\home.png
+C:\Users\itzluminara\Desktop\simple_stock_management_system\simple_stock_management_system\obj\Debug\View\LogView.g.cs
+C:\Users\itzluminara\Desktop\simple_stock_management_system\simple_stock_management_system\obj\Debug\View\LogView.baml
+C:\Users\itzluminara\Desktop\simple_stock_management_system\simple_stock_management_system\obj\Debug\View\StockView.g.cs
+C:\Users\itzluminara\Desktop\simple_stock_management_system\simple_stock_management_system\obj\Debug\View\StockView.baml

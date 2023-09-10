@@ -125,8 +125,14 @@
         <Compile Include="View\LoginView.xaml.cs">
           <DependentUpon>LoginView.xaml</DependentUpon>
         </Compile>
+        <Compile Include="View\LogView.xaml.cs">
+          <DependentUpon>LogView.xaml</DependentUpon>
+        </Compile>
         <Compile Include="View\MainView.xaml.cs">
           <DependentUpon>MainView.xaml</DependentUpon>
+        </Compile>
+        <Compile Include="View\StockView.xaml.cs">
+          <DependentUpon>StockView.xaml</DependentUpon>
         </Compile>
         <Page Include="CustomControls\BindablePasswordBox.xaml" />
         <Page Include="MainWindow.xaml">
@@ -143,7 +149,9 @@
         </Compile>
         <Page Include="View\DashboardView.xaml" />
         <Page Include="View\LoginView.xaml" />
+        <Page Include="View\LogView.xaml" />
         <Page Include="View\MainView.xaml" />
+        <Page Include="View\StockView.xaml" />
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Properties\AssemblyInfo.cs">
