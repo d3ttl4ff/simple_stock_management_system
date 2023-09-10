@@ -20,7 +20,7 @@
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontFamily" Value="JetBrains Mono"/>
             <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Backgroun" Value="#9fef00"/>
+            <Setter Property="Background" Value="#9fef00"/>
             
             <Setter Property="Template">
                 <Setter.Value>
