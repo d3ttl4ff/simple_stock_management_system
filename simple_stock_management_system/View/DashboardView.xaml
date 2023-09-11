@@ -45,7 +45,7 @@
         
         <Style x:Key="CustomTextBoxStyleOne" TargetType="TextBox">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#a4b1cd"/>
+            <Setter Property="Foreground" Value="#ffaf00"/>
             <Setter Property="BorderThickness" Value="1.5"/>
             <Setter Property="CaretBrush" Value="#a4b1cd"/>
             <Setter Property="BorderBrush" Value="#a4b1cd"/>
@@ -90,7 +90,7 @@
         
         <Style x:Key="CustomTextBoxStyleTwo" TargetType="TextBox">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#a4b1cd"/>
+            <Setter Property="Foreground" Value="#ffaf00"/>
             <Setter Property="BorderThickness" Value="1.5"/>
             <Setter Property="CaretBrush" Value="#a4b1cd"/>
             <Setter Property="BorderBrush" Value="#a4b1cd"/>
@@ -135,7 +135,7 @@
         
         <Style x:Key="CustomTextBoxStyleThree" TargetType="TextBox">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#a4b1cd"/>
+            <Setter Property="Foreground" Value="#ffaf00"/>
             <Setter Property="BorderThickness" Value="1.5"/>
             <Setter Property="CaretBrush" Value="#a4b1cd"/>
             <Setter Property="BorderBrush" Value="#a4b1cd"/>
@@ -180,7 +180,7 @@
         
         <Style x:Key="CustomTextBoxStyleFour" TargetType="TextBox">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#a4b1cd"/>
+            <Setter Property="Foreground" Value="#ffaf00"/>
             <Setter Property="BorderThickness" Value="1.5"/>
             <Setter Property="CaretBrush" Value="#a4b1cd"/>
             <Setter Property="BorderBrush" Value="#a4b1cd"/>
