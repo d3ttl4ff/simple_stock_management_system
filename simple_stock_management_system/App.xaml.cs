@@ -32,8 +32,9 @@ namespace simple_stock_management_system
             {
                 if (!loginView.IsVisible && loginView.IsLoaded)
                 {
-                    var mainView = new MainView();
-                    mainView.Opacity = 0;
+                    var mainView = new MainView {
+                        Opacity = 0
+                    };
                     mainView.Show();
 
                     //Animation to fade in the MainView

@@ -113,10 +113,12 @@
           <DependentUpon>BindablePasswordBox.xaml</DependentUpon>
         </Compile>
         <Compile Include="Models\IUserRepository.cs" />
+        <Compile Include="Models\StockModel.cs" />
         <Compile Include="Models\UserModel.cs" />
         <Compile Include="Repositories\RepositoryBase.cs" />
         <Compile Include="Repositories\UserRepository.cs" />
         <Compile Include="ViewModels\LoginViewModel.cs" />
+        <Compile Include="ViewModels\StockDatabaseModel.cs" />
         <Compile Include="ViewModels\ViewModelBase.cs" />
         <Compile Include="ViewModels\ViewModelCommand.cs" />
         <Compile Include="View\DashboardView.xaml.cs">
