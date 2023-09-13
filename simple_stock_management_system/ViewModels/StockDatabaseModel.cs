@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -99,7 +100,7 @@ public class StockDatabaseModel : ViewModelBase {
             string itemName = ItemName;
             int itemQuantity = ItemQuantity;
             string customNote = CustomNote;
-            DateTime currentDate = DateTime.Now;
+            string currentDate = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
 
             // Insert the values into the stock database
             InsertIntoStockDatabase(itemId, stockCode, itemName, itemQuantity, currentDate, customNote);
@@ -110,7 +111,7 @@ public class StockDatabaseModel : ViewModelBase {
             ItemQuantity = 0;
             CustomNote = "";
             ErrorMessage =  "";
-            SuccessMessage = "Item added successfully";
+            SuccessMessage = "* Item added successfully";
             ShowSucessMessageWithFadeIn();
         }
         catch (MySqlException e) {
@@ -140,7 +141,7 @@ public class StockDatabaseModel : ViewModelBase {
         
     }
 
-    private void InsertIntoStockDatabase(char[] itemId, string stockCode, string itemName, int itemQuantity, DateTime currentDate, string customNote) {
+    private void InsertIntoStockDatabase(char[] itemId, string stockCode, string itemName, int itemQuantity, string currentDate, string customNote) {
         
         string connectionString = "server=localhost;user=root;database=main;port=3306;password=root";
 
@@ -158,7 +159,7 @@ public class StockDatabaseModel : ViewModelBase {
                 command.Parameters.AddWithValue("@item_name", itemName);
                 command.Parameters.AddWithValue("@item_quantity", itemQuantity);
                 command.Parameters.AddWithValue("@current_date", currentDate);
-                command.Parameters.AddWithValue("@custom_note", customNote);
+                command.Parameters.AddWithValue("@custom_note", customNote ?? "");
 
                 command.ExecuteNonQuery();
             }
