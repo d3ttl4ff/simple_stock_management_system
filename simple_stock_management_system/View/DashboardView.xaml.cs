@@ -7,6 +7,7 @@ using simple_stock_management_system.ViewModels;
 namespace simple_stock_management_system.View; 
 
 public partial class DashboardView : Window {
+    
     public DashboardView() {
         InitializeComponent();
     }
@@ -43,20 +44,6 @@ public partial class DashboardView : Window {
         };
         
         mainView.BeginAnimation(OpacityProperty, fadeInAnimation);
-    }
-
-
-    // Item operation methods
-    // private void Btn_AddItem(object sender, RoutedEventArgs e) {
-    //     throw new NotImplementedException();
-    // }
-
-    private void Btn_RemoveItem(object sender, RoutedEventArgs e) {
-        throw new NotImplementedException();
-    }
-
-    private void Btn_UpdateItem(object sender, RoutedEventArgs e) {
-        throw new NotImplementedException();
     }
 }
 

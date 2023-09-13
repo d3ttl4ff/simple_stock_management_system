@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Net;
-using System.Security;
-using System.Security.Principal;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
-using simple_stock_management_system.Models;
-using simple_stock_management_system.Repositories;
+using System.Windows.Threading;
 using MySql.Data.MySqlClient;
 
 namespace simple_stock_management_system.ViewModels; 
@@ -20,8 +15,12 @@ public class StockDatabaseModel : ViewModelBase {
     private string _stockCode;
     private string _itemName;
     private int _itemQuantity;
-    private DateTime _currentDate;
+    string _customNote;
+    private string _errorMessage;
+    private string _successMessage;
     
+    public int ErrorMessageOpacity { get; set; }
+
     //Properties
     public char[] ItemId {
         get => _itemId;
@@ -34,7 +33,7 @@ public class StockDatabaseModel : ViewModelBase {
     public string StockCode {
         get => _stockCode;
         set {
-            _stockCode = value;
+            _stockCode = value.ToUpper();
             OnPropertyChanged(nameof(StockCode));
         } 
     }
@@ -55,15 +54,31 @@ public class StockDatabaseModel : ViewModelBase {
         } 
     }
     
-    public DateTime CurrentDate {
-        get => _currentDate;
+    public string CustomNote {
+        get => _customNote;
         set {
-            _currentDate = value;
-            OnPropertyChanged(nameof(CurrentDate));
+            _customNote = value;
+            OnPropertyChanged(nameof(CustomNote));
         } 
     }
     
-    //-> Commands
+    public string ErrorMessage {
+        get => _errorMessage;
+        set {
+            _errorMessage = value;
+            OnPropertyChanged(nameof(ErrorMessage));
+        }
+    }
+    
+    public string SuccessMessage {
+        get => _successMessage;
+        set {
+            _successMessage = value;
+            OnPropertyChanged(nameof(SuccessMessage));
+        }
+    }
+
+    //Commands
     public ICommand AddItemCommand { get; }
     
     //Constructor
@@ -73,28 +88,59 @@ public class StockDatabaseModel : ViewModelBase {
     
     //Methods
     private void ExecuteAddItemCommand(object obj) {
-        // Generate a UUID for the item
-        ItemId = Guid.NewGuid().ToString("D").ToCharArray();
+
+        try {
+            // Generate a UUID for the item
+            ItemId = Guid.NewGuid().ToString("D").ToCharArray();
         
-        // Retrieve values from properties
-        char[] itemId = ItemId;
-        string stockCode = StockCode;
-        string itemName = ItemName;
-        int itemQuantity = ItemQuantity;
-        DateTime currentDate = CurrentDate;
+            // Retrieve values from properties
+            char[] itemId = ItemId;
+            string stockCode = StockCode;
+            string itemName = ItemName;
+            int itemQuantity = ItemQuantity;
+            string customNote = CustomNote;
+            DateTime currentDate = DateTime.Now;
 
-        // Insert the values into your stock database
-        InsertIntoStockDatabase(itemId, stockCode, itemName, itemQuantity, currentDate);
+            // Insert the values into the stock database
+            InsertIntoStockDatabase(itemId, stockCode, itemName, itemQuantity, currentDate, customNote);
 
-        // Optionally, you can clear the properties after insertion
-        StockCode = "";
-        ItemName = "";
-        ItemQuantity = 0;
-        CurrentDate = DateTime.Now;
+            // Clear the properties after inserting the values into the database
+            StockCode = "";
+            ItemName = "";
+            ItemQuantity = 0;
+            CustomNote = "";
+            ErrorMessage =  "";
+            SuccessMessage = "Item added successfully";
+            ShowSucessMessageWithFadeIn();
+        }
+        catch (MySqlException e) {
+            ErrorMessage =  "Error: " + e.Message;
+            ShowErrorMessageWithFadeIn();
+        }
+        catch (FormatException e) {
+            ErrorMessage =  "Error: " + e.Message;
+            ShowErrorMessageWithFadeIn();
+        }
+        catch (ArgumentNullException e) {
+            ErrorMessage =  "Error: " + e.Message;
+            ShowErrorMessageWithFadeIn();
+        }
+        catch (OverflowException e) {
+            ErrorMessage =  "Error: " + e.Message;
+            ShowErrorMessageWithFadeIn();
+        }
+        catch (OutOfMemoryException e) {
+            ErrorMessage =  "Error: " + e.Message;
+            ShowErrorMessageWithFadeIn();
+        }
+        catch (Exception e) {
+            ErrorMessage =  "Error";
+            ShowErrorMessageWithFadeIn();
+        }
         
     }
 
-    private void InsertIntoStockDatabase(char[] itemId, string stockCode, string itemName, int itemQuantity, DateTime currentDate) {
+    private void InsertIntoStockDatabase(char[] itemId, string stockCode, string itemName, int itemQuantity, DateTime currentDate, string customNote) {
         
         string connectionString = "server=localhost;user=root;database=main;port=3306;password=root";
 
@@ -102,7 +148,8 @@ public class StockDatabaseModel : ViewModelBase {
         {
             connection.Open();
 
-            string insertQuery = "INSERT INTO stock (Id, StockCode, ItemName, Quantity, Date) VALUES (@item_id, @stock_code, @item_name, @item_quantity, @current_date)";
+            string insertQuery =
+                "INSERT INTO stock (Id, StockCode, ItemName, Quantity, Date, Note) VALUES (@item_id, @stock_code, @item_name, @item_quantity, @current_date, @custom_note)";
 
             using (MySqlCommand command = new MySqlCommand(insertQuery, connection))
             {
@@ -111,8 +158,71 @@ public class StockDatabaseModel : ViewModelBase {
                 command.Parameters.AddWithValue("@item_name", itemName);
                 command.Parameters.AddWithValue("@item_quantity", itemQuantity);
                 command.Parameters.AddWithValue("@current_date", currentDate);
+                command.Parameters.AddWithValue("@custom_note", customNote);
 
                 command.ExecuteNonQuery();
+            }
+            
+            connection.Close();
+        }
+    }
+    
+    //Error message fade in animation
+    private void ShowErrorMessageWithFadeIn()
+    {
+        ErrorMessageOpacity = 0;
+
+        if (Application.Current.MainWindow != null) {
+            if (Application.Current.MainWindow.FindName("ErrorMessageBorder") is Border border)
+            {
+                var fadeInAnimation = new DoubleAnimation
+                {
+                    From = 0,
+                    To = 1,
+                    Duration = TimeSpan.FromSeconds(0.1)
+                };
+
+                border.BeginAnimation(UIElement.OpacityProperty, fadeInAnimation);
+            }
+        }
+    }
+    
+    private void ShowSucessMessageWithFadeIn()
+    {
+        ErrorMessageOpacity = 0;
+
+        if (Application.Current.MainWindow != null) {
+            if (Application.Current.MainWindow.FindName("SuccessMessageBorder") is Border border)
+            {
+                var fadeInAnimation = new DoubleAnimation
+                {
+                    From = 0,
+                    To = 1,
+                    Duration = TimeSpan.FromSeconds(0.1)
+                };
+
+                border.BeginAnimation(UIElement.OpacityProperty, fadeInAnimation);
+                
+                var timer = new DispatcherTimer
+                {
+                    Interval = TimeSpan.FromSeconds(2)
+                };
+
+                timer.Tick += (sender, args) =>
+                {
+                    var fadeOutAnimation = new DoubleAnimation
+                    {
+                        From = 1,
+                        To = 0,
+                        Duration = TimeSpan.FromSeconds(0.3)
+                    };
+
+                    border.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+                    
+                    timer.Stop();
+                };
+                
+                timer.Start();
             }
         }
     }

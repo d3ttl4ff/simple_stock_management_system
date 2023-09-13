@@ -119,6 +119,5 @@ namespace simple_stock_management_system.ViewModels {
                 }
             }
         }
-        
     }
 }
