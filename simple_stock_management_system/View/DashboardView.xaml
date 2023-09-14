@@ -527,7 +527,7 @@
                                      Style="{StaticResource CustomTextBoxStyleFour}"/>
                         </Grid>
                         
-                        <Grid Grid.Row="0" Grid.Column="3">
+                        <Grid Grid.Row="0" Grid.Column="5">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="5"/>
@@ -570,7 +570,7 @@
                                      IsReadOnly="True"
                                      Style="{StaticResource DisabledTextBoxStyle}"/>
                         
-                            <TextBlock Grid.Row="8" Grid.Column="0" Text="Quantity"
+                            <TextBlock Grid.Row="8" Grid.Column="0" Text="Available Quantity"
                                        Foreground="#a4b1cd"
                                        FontSize="15"
                                        FontFamily="JetBrains Mono"
@@ -589,6 +589,69 @@
                                      Text="{Binding RemoveCustomNote, UpdateSourceTrigger=PropertyChanged}"
                                      IsReadOnly="True"
                                      Style="{StaticResource DisabledTextBoxStyle}"/>
+                        </Grid>
+                        
+                        <Grid Grid.Row="0" Grid.Column="3">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="5"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="20"/>
+                            
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="5"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="20"/>
+                            
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="5"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="20"/>
+                            
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="5"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="20"/>
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Stock Code"
+                                       Foreground="#a4b1cd"
+                                       FontSize="15"
+                                       FontFamily="JetBrains Mono"
+                                       HorizontalAlignment="Left"/>
+                            <TextBox Grid.Row="2" Grid.Column="0" Name="UpdateStokeCodeTextBox" Width="255"
+                                     Text="{Binding UpdateStockCode, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource CustomTextBoxStyleTwo}"/>
+                        
+                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Item Name"
+                                       Foreground="#a4b1cd"
+                                       FontSize="15"
+                                       FontFamily="JetBrains Mono"
+                                       HorizontalAlignment="Left"/>
+                            <TextBox Grid.Row="6" Grid.Column="0" Name="UpdateItemNameTextBox" Width="255"
+                                     Text="{Binding UpdateItemName, UpdateSourceTrigger=PropertyChanged}"
+                                     IsReadOnly="True"
+                                     Style="{StaticResource DisabledTextBoxStyle}"/>
+                        
+                            <TextBlock Grid.Row="8" Grid.Column="0" Text="Available Quantity"
+                                       Foreground="#a4b1cd"
+                                       FontSize="15"
+                                       FontFamily="JetBrains Mono"
+                                       HorizontalAlignment="Left"/>
+                            <TextBox Grid.Row="10" Grid.Column="0" Name="UpdateItemQuantityBox" Width="255"
+                                     Text="{Binding UpdateItemQuantity, UpdateSourceTrigger=PropertyChanged}"
+                                     IsReadOnly="True"
+                                     Style="{StaticResource DisabledTextBoxStyle}"/>
+                        
+                            <TextBlock Grid.Row="12" Grid.Column="0" Text="Remove Quantity"
+                                       Foreground="#a4b1cd"
+                                       FontSize="15"
+                                       FontFamily="JetBrains Mono"
+                                       HorizontalAlignment="Left"/>
+                            <TextBox Grid.Row="14" Grid.Column="0" Name="NewUpdateItemQuantityBox" Width="255"
+                                     Text="{Binding NewUpdateItemQuantity, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource CustomTextBoxStyleFour}"/>
                         </Grid>
                         
                         <Grid Grid.Row="1" Grid.Column="1">
@@ -622,7 +685,7 @@
                                     Style="{StaticResource CustomButtonStyle}"/>
                         </Grid>
                         
-                        <Grid Grid.Row="3" Grid.Column="3" 
+                        <Grid Grid.Row="3" Grid.Column="5" 
                               HorizontalAlignment="Center" VerticalAlignment="Center">
                         
                             <Button x:Name="BtnRemove"
@@ -631,12 +694,12 @@
                                     Style="{StaticResource CustomButtonStyle}"/>
                         </Grid>
                         
-                        <Grid Grid.Row="3" Grid.Column="5" 
+                        <Grid Grid.Row="3" Grid.Column="3" 
                               HorizontalAlignment="Center" VerticalAlignment="Center">
                         
                             <Button x:Name="BtnUpdate"
                                     Command="{Binding UpdateItemCommand}"
-                                    Content="Update Item"
+                                    Content="Update Quantity"
                                     Style="{StaticResource CustomButtonStyle}"/>
                         </Grid>
                     </Grid>

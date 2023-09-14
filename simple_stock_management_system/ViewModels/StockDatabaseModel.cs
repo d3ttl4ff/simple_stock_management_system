@@ -105,13 +105,13 @@ public class StockDatabaseModel : ViewModelBase {
     private void ExecuteAddItemCommand(object obj) {
 
         try {
-            if (ItemQuantity <= 0 || !System.Text.RegularExpressions.Regex.IsMatch(ItemQuantity.ToString(), "^[0-9]+$")) {
+            if (ItemQuantity <= 0 || !Regex.IsMatch(ItemQuantity.ToString(), "^[0-9]+$")) {
                 ErrorMessage = "Error: Item Quantity can only be a positive integer";
                 ShowErrorMessageWithFadeIn();
                 return;
             }
             
-            if (!System.Text.RegularExpressions.Regex.IsMatch(StockCode, "^[a-zA-Z0-9-]+$")) {
+            if (!Regex.IsMatch(StockCode, "^[a-zA-Z0-9-]+$")) {
                 ErrorMessage = "Error: Stock Code can only contain letters, numbers, and '-'";
                 ShowErrorMessageWithFadeIn();
                 return;
