@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using MySql.Data.MySqlClient;
+using simple_stock_management_system.Repositories;
 
 namespace simple_stock_management_system.ViewModels; 
 
@@ -34,7 +35,7 @@ public class StockDatabaseModel : ViewModelBase {
     public string StockCode {
         get => _stockCode;
         set {
-            _stockCode = value.ToUpper();
+            _stockCode = value.Replace(" ", "").ToUpper();
             OnPropertyChanged(nameof(StockCode));
         } 
     }
@@ -42,8 +43,21 @@ public class StockDatabaseModel : ViewModelBase {
     public string ItemName {
         get => _itemName;
         set {
-            _itemName = value;
-            OnPropertyChanged(nameof(ItemName));
+            if (value.StartsWith("-") || value.StartsWith("_"))
+            {
+                ErrorMessage = "Error: Item Name cannot start with a hyphen (-) or an underscore (_)";
+                ShowErrorMessageWithFadeIn();
+            }
+            else if (Regex.IsMatch(value, "^[a-zA-Z0-9_-]*$"))
+            {
+                _itemName = value;
+                OnPropertyChanged(nameof(ItemName));
+            }
+            else
+            {
+                ErrorMessage = "Error: Item Name can only contain letters, numbers, spaces, hyphens, and underscores";
+                ShowErrorMessageWithFadeIn();
+            }
         } 
     }
     
@@ -91,6 +105,30 @@ public class StockDatabaseModel : ViewModelBase {
     private void ExecuteAddItemCommand(object obj) {
 
         try {
+            if (ItemQuantity <= 0 || !System.Text.RegularExpressions.Regex.IsMatch(ItemQuantity.ToString(), "^[0-9]+$")) {
+                ErrorMessage = "Error: Item Quantity can only be a positive integer";
+                ShowErrorMessageWithFadeIn();
+                return;
+            }
+            
+            if (!System.Text.RegularExpressions.Regex.IsMatch(StockCode, "^[a-zA-Z0-9-]+$")) {
+                ErrorMessage = "Error: Stock Code can only contain letters, numbers, and '-'";
+                ShowErrorMessageWithFadeIn();
+                return;
+            }
+            
+            if (string.IsNullOrWhiteSpace(StockCode) || string.IsNullOrWhiteSpace(ItemName)) {
+                if (string.IsNullOrWhiteSpace(StockCode)) {
+                    ErrorMessage = "Error: Stock Code cannot be empty";
+                }
+                else if (string.IsNullOrWhiteSpace(ItemName)) {
+                    ErrorMessage = "Error: Item Name cannot be empty";
+                }
+                
+                ShowErrorMessageWithFadeIn();
+                return;
+            }
+            
             // Generate a UUID for the item
             ItemId = Guid.NewGuid().ToString("D").ToCharArray();
         
@@ -101,6 +139,16 @@ public class StockDatabaseModel : ViewModelBase {
             int itemQuantity = ItemQuantity;
             string customNote = CustomNote;
             string currentDate = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+            
+            using (ConcreteRepository repository = new ConcreteRepository())
+            {
+                string connectionString = repository.GetConnectionString();
+                
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+                }
+            }
 
             // Insert the values into the stock database
             InsertIntoStockDatabase(itemId, stockCode, itemName, itemQuantity, currentDate, customNote);
@@ -135,36 +183,37 @@ public class StockDatabaseModel : ViewModelBase {
             ShowErrorMessageWithFadeIn();
         }
         catch (Exception e) {
-            ErrorMessage =  "Error";
+            ErrorMessage = "Error: " + e.Message;
             ShowErrorMessageWithFadeIn();
         }
         
     }
 
     private void InsertIntoStockDatabase(char[] itemId, string stockCode, string itemName, int itemQuantity, string currentDate, string customNote) {
-        
-        string connectionString = "server=localhost;user=root;database=main;port=3306;password=root";
 
-        using (MySqlConnection connection = new MySqlConnection(connectionString))
-        {
-            connection.Open();
-
-            string insertQuery =
-                "INSERT INTO stock (Id, StockCode, ItemName, Quantity, Date, Note) VALUES (@item_id, @stock_code, @item_name, @item_quantity, @current_date, @custom_note)";
-
-            using (MySqlCommand command = new MySqlCommand(insertQuery, connection))
-            {
-                command.Parameters.AddWithValue("@item_id", new string(itemId));
-                command.Parameters.AddWithValue("@stock_code", stockCode);
-                command.Parameters.AddWithValue("@item_name", itemName);
-                command.Parameters.AddWithValue("@item_quantity", itemQuantity);
-                command.Parameters.AddWithValue("@current_date", currentDate);
-                command.Parameters.AddWithValue("@custom_note", customNote ?? "");
-
-                command.ExecuteNonQuery();
-            }
+        using (ConcreteRepository repository = new ConcreteRepository()) {
+            string connectionString = repository.GetConnectionString();
             
-            connection.Close();
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string insertQuery =
+                    "INSERT INTO stock (Id, StockCode, ItemName, Quantity, Date, Note) VALUES (@item_id, @stock_code, @item_name, @item_quantity, @current_date, @custom_note)";
+
+                using (MySqlCommand command = new MySqlCommand(insertQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@item_id", new string(itemId));
+                    command.Parameters.AddWithValue("@stock_code", stockCode);
+                    command.Parameters.AddWithValue("@item_name", itemName);
+                    command.Parameters.AddWithValue("@item_quantity", itemQuantity);
+                    command.Parameters.AddWithValue("@current_date", currentDate);
+                    command.Parameters.AddWithValue("@custom_note", customNote ?? "");
+
+                    command.ExecuteNonQuery();
+                }
+                connection.Close();
+            }
         }
     }
     
@@ -209,7 +258,7 @@ public class StockDatabaseModel : ViewModelBase {
                     Interval = TimeSpan.FromSeconds(2)
                 };
 
-                timer.Tick += (sender, args) =>
+                timer.Tick += (_, _) =>
                 {
                     var fadeOutAnimation = new DoubleAnimation
                     {
@@ -227,5 +276,4 @@ public class StockDatabaseModel : ViewModelBase {
             }
         }
     }
-
 }

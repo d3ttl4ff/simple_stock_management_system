@@ -80,3 +80,4 @@ C:\Users\itzluminara\Desktop\simple_stock_management_system\simple_stock_managem
 C:\Users\itzluminara\Desktop\simple_stock_management_system\simple_stock_management_system\bin\Debug\Images\barcode.png
 C:\Users\itzluminara\Desktop\simple_stock_management_system\simple_stock_management_system\bin\Debug\Images\product.png
 C:\Users\itzluminara\Desktop\simple_stock_management_system\simple_stock_management_system\bin\Debug\Images\time.png
+C:\Users\itzluminara\Desktop\simple_stock_management_system\simple_stock_management_system\obj\Debug\simple_stock_management_system.csproj.SuggestedBindingRedirects.cache
