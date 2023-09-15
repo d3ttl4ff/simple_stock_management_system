@@ -18,7 +18,14 @@ public class StockDatabaseModel : ViewModelBase {
     private string _itemName;
     private int _itemQuantity;
     string _customNote;
+
+    private string _removeStockCode;
+    private string _removeItemName;
+    private int _removeItemQuantity;
+    string _removeCustomNote;
+    
     private string _errorMessage;
+    private string _removeErrorMessage;
     private string _successMessage;
     
     public int ErrorMessageOpacity { get; set; }
@@ -76,12 +83,67 @@ public class StockDatabaseModel : ViewModelBase {
             OnPropertyChanged(nameof(CustomNote));
         } 
     }
+
+    public string RemoveStockCode {
+        get => _removeStockCode;
+        set {
+            if (value.StartsWith("-") || value.StartsWith("_"))
+            {
+                RemoveErrorMessage = "Error: Stock Code cannot start with a hyphen (-) or an underscore (_)";
+                ShowRemoveErrorMessageWithFadeIn();
+            }
+            else if (Regex.IsMatch(value, "^[a-zA-Z0-9_-]*$"))
+            {
+                _removeStockCode = value.Replace(" ", "").ToUpper();
+                OnPropertyChanged(nameof(ItemName));
+                RemoveErrorMessage = "";
+            }
+            else
+            {
+                RemoveErrorMessage = "Error: Stock Code can only contain letters, numbers, spaces, hyphens, and underscores";
+                ShowRemoveErrorMessageWithFadeIn();
+            }
+            OnPropertyChanged(nameof(RemoveStockCode));
+        } 
+    }
+
+    public string RemoveItemName {
+        get => _removeItemName;
+        set {
+            _removeItemName = value;
+            OnPropertyChanged(nameof(RemoveItemName));
+        } 
+    }
+    
+    public int RemoveItemQuantity {
+        get => _removeItemQuantity;
+        set {
+            _removeItemQuantity = value;
+            OnPropertyChanged(nameof(RemoveItemQuantity));
+        } 
+    }
+    
+    public string RemoveCustomNote {
+        get => _removeCustomNote;
+        set {
+            _removeCustomNote = value;
+            OnPropertyChanged(nameof(RemoveCustomNote));
+        } 
+    }
     
     public string ErrorMessage {
         get => _errorMessage;
         set {
             _errorMessage = value;
             OnPropertyChanged(nameof(ErrorMessage));
+        }
+    }
+    
+    public string RemoveErrorMessage {
+        get => _removeErrorMessage;
+        set {
+            _removeErrorMessage = value;
+            OnPropertyChanged(nameof(RemoveErrorMessage));
         }
     }
     
@@ -95,10 +157,14 @@ public class StockDatabaseModel : ViewModelBase {
 
     //Commands
     public ICommand AddItemCommand { get; }
+    public ICommand RemoveItemCommand { get; }
+    public ICommand DeleteItemCommand { get; }
     
     //Constructor
     public StockDatabaseModel() {
         AddItemCommand = new ViewModelCommand(ExecuteAddItemCommand);
+        RemoveItemCommand = new ViewModelCommand(ExecuteRemoveItemCommand);
+        DeleteItemCommand = new ViewModelCommand(ExecuteDeleteItemCommand);
     }
     
     //Methods
@@ -160,7 +226,7 @@ public class StockDatabaseModel : ViewModelBase {
             CustomNote = "";
             ErrorMessage =  "";
             SuccessMessage = "* Item added successfully";
-            ShowSucessMessageWithFadeIn();
+            ShowSuccessMessageWithFadeIn();
         }
         catch (MySqlException e) {
             ErrorMessage =  "Error: " + e.Message;
@@ -186,7 +252,6 @@ public class StockDatabaseModel : ViewModelBase {
             ErrorMessage = "Error: " + e.Message;
             ShowErrorMessageWithFadeIn();
         }
-        
     }
 
     private void InsertIntoStockDatabase(char[] itemId, string stockCode, string itemName, int itemQuantity, string currentDate, string customNote) {
@@ -217,13 +282,152 @@ public class StockDatabaseModel : ViewModelBase {
         }
     }
     
+    private void ExecuteRemoveItemCommand(Object obj) {
+        try {
+            if (string.IsNullOrWhiteSpace(RemoveStockCode)) {
+                RemoveErrorMessage = "Error: Stock Code cannot be empty";
+                
+                RemoveItemName = "";
+                RemoveItemQuantity = 0;
+                RemoveCustomNote = "";  
+                
+                ShowRemoveErrorMessageWithFadeIn();
+                return;
+            }
+            
+            string removeStockCode = RemoveStockCode;
+            
+            GetDetailsFromDatabase(removeStockCode);
+            
+            RemoveItemName = "";
+            RemoveItemQuantity = 0;
+            RemoveCustomNote = ""; 
+            RemoveErrorMessage = "";
+        }
+        catch(MySqlException e) {
+            RemoveErrorMessage =  "Error: " + e.Message;
+            ShowRemoveErrorMessageWithFadeIn();
+        }
+        catch(FormatException e) {
+            RemoveErrorMessage =  "Error: " + e.Message;
+            ShowRemoveErrorMessageWithFadeIn();
+        }
+        catch (Exception e) {
+            RemoveErrorMessage =  "Error: " + e.Message;
+            ShowRemoveErrorMessageWithFadeIn();
+        }
+    }
+    
+    private void GetDetailsFromDatabase(string stockCode) {
+        using (ConcreteRepository repository = new ConcreteRepository()) {
+            string connectionString = repository.GetConnectionString();
+            
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {   
+                connection.Open();
+
+                string query = "SELECT ItemName, Quantity, Note FROM stock WHERE StockCode = @stockCode";
+                
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.Add(new MySqlParameter("@stockCode", MySqlDbType.VarChar) { Value = stockCode });
+
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read()) 
+                            {
+                                string itemName = reader.GetString("ItemName");
+                                int itemQuantity = reader.GetInt32("Quantity");
+                                string customNote = reader.GetString("Note");
+
+                                RemoveItemName = itemName;
+                                RemoveItemQuantity = itemQuantity;
+                                RemoveCustomNote = customNote;
+                            }
+                        }
+                        else 
+                        {
+                            RemoveItemName = "";
+                            RemoveItemQuantity = 0;
+                            RemoveCustomNote = "";
+                            
+                            RemoveErrorMessage = "Error: No entry found in the database for the given stock code";
+                            ShowRemoveErrorMessageWithFadeIn();
+                        }
+                    }
+                }
+                connection.Close();
+            }
+        }
+    }
+    
+    private void ExecuteDeleteItemCommand(Object obj) {
+        try {
+            if (string.IsNullOrWhiteSpace(RemoveStockCode)) {
+                RemoveErrorMessage = "Error: Stock Code cannot be empty";
+                
+                RemoveItemName = "";
+                RemoveItemQuantity = 0;
+                RemoveCustomNote = "";  
+                
+                ShowRemoveErrorMessageWithFadeIn();
+                return;
+            }
+            RemoveErrorMessage = "";
+            
+            string removeStockCode = RemoveStockCode;
+        
+            RemoveItemFromDatabase(removeStockCode);
+        }
+        catch (MySqlException e) {
+            RemoveErrorMessage =  "Error: " + e.Message;
+            ShowRemoveErrorMessageWithFadeIn();
+        }
+        catch (Exception e) {
+            RemoveErrorMessage =  "Error: " + e.Message;
+            ShowRemoveErrorMessageWithFadeIn();
+        }
+    }
+    
+    private void RemoveItemFromDatabase(string stockCode) {
+        using (ConcreteRepository repository = new ConcreteRepository()) {
+            string connectionString = repository.GetConnectionString();
+            
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {   
+                connection.Open();
+
+                string query = "DELETE FROM stock WHERE StockCode = @stockCode";
+                
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.Add(new MySqlParameter("@stockCode", MySqlDbType.VarChar) { Value = stockCode });
+                    command.ExecuteNonQuery();
+                }
+                connection.Close();
+            }
+        }
+    }
+    
     //Error message fade in animation
     private void ShowErrorMessageWithFadeIn()
+    {
+        ShowMessageWithFadeIn("ErrorMessageBorder");
+    }
+
+    private void ShowRemoveErrorMessageWithFadeIn()
+    {
+        ShowMessageWithFadeIn("RemoveErrorMessageBorder");
+    }
+    
+    private void ShowMessageWithFadeIn(string borderName)
     {
         ErrorMessageOpacity = 0;
 
         if (Application.Current.MainWindow != null) {
-            if (Application.Current.MainWindow.FindName("ErrorMessageBorder") is Border border)
+            if (Application.Current.MainWindow.FindName(borderName) is Border border)
             {
                 var fadeInAnimation = new DoubleAnimation
                 {
@@ -237,7 +441,7 @@ public class StockDatabaseModel : ViewModelBase {
         }
     }
     
-    private void ShowSucessMessageWithFadeIn()
+    private void ShowSuccessMessageWithFadeIn()
     {
         ErrorMessageOpacity = 0;
 

@@ -29,7 +29,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border CornerRadius="10"
+                        <Border CornerRadius="5"
                                 Background="{TemplateBinding Background}">
                             <ContentPresenter VerticalAlignment="Center"
                                               HorizontalAlignment="Center"/>
@@ -263,10 +263,15 @@
             <Setter Property="IsEnabled" Value="False" />
             <Setter Property="Background">
                 <Setter.Value>
-                    <SolidColorBrush Color="#a4b1cd" Opacity="0.3" />
+                    <SolidColorBrush Color="#a4b1cd" Opacity="0.3"/>
                 </Setter.Value>
             </Setter>
-            <Setter Property="Foreground" Value="#2ee7b6"/>
+            <Setter Property="Foreground">
+                <Setter.Value>
+                    <SolidColorBrush Color="#2ee7b6" Opacity="0.7"/>
+                </Setter.Value>
+            </Setter>
+            <!-- <Setter Property="Foreground" Value="#2ee7b6"/> -->
             <Setter Property="BorderThickness" Value="1.5"/>
             <Setter Property="CaretBrush" Value="#a4b1cd"/>
             <Setter Property="BorderBrush" Value="#a4b1cd"/>
@@ -517,7 +522,7 @@
                                      Text="{Binding ItemQuantity, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource CustomTextBoxStyleThree}"/>
                         
-                            <TextBlock Grid.Row="12" Grid.Column="0" Text="Custome Note"
+                            <TextBlock Grid.Row="12" Grid.Column="0" Text="Custom Note"
                                        Foreground="#a4b1cd"
                                        FontSize="15"
                                        FontFamily="JetBrains Mono"
@@ -580,7 +585,7 @@
                                      IsReadOnly="True"
                                      Style="{StaticResource DisabledTextBoxStyle}"/>
                         
-                            <TextBlock Grid.Row="12" Grid.Column="0" Text="Custome Note"
+                            <TextBlock Grid.Row="12" Grid.Column="0" Text="Custom Note"
                                        Foreground="#a4b1cd"
                                        FontSize="15"
                                        FontFamily="JetBrains Mono"
@@ -676,21 +681,34 @@
                             </Border>
                         </Grid>
                         
+                        <Grid Grid.Row="1" Grid.Column="5">
+                            <Border x:Name="RemoveErrorMessageBorder" Opacity="{Binding ErrorMessageOpacity}">
+                                <TextBlock Text="{Binding RemoveErrorMessage}"
+                                           TextWrapping="Wrap"
+                                           Foreground="#ff3e3e"
+                                           FontSize="12"
+                                           Width="255"
+                                           FontWeight="Light"
+                                           FontFamily="JetBrains Mono"/>
+                            </Border>
+                            
+                            <Border x:Name="RemoveSuccessMessageBorder" Opacity="{Binding ErrorMessageOpacity}">
+                                <TextBlock Text="{Binding RemoveSuccessMessage}"
+                                           TextWrapping="Wrap"
+                                           Foreground="#9fef00"
+                                           FontSize="12"
+                                           Width="255"
+                                           FontWeight="Light"
+                                           FontFamily="JetBrains Mono"/>
+                            </Border>
+                        </Grid>
+                        
                         <Grid Grid.Row="3" Grid.Column="1" 
                               HorizontalAlignment="Center" VerticalAlignment="Center">
                             
                             <Button x:Name="BtnAdd"
                                     Command="{Binding AddItemCommand}"
                                     Content="Add Item"
-                                    Style="{StaticResource CustomButtonStyle}"/>
-                        </Grid>
-                        
-                        <Grid Grid.Row="3" Grid.Column="5" 
-                              HorizontalAlignment="Center" VerticalAlignment="Center">
-                        
-                            <Button x:Name="BtnRemove"
-                                    Command="{Binding RemoveItemCommand}"
-                                    Content="Remove Item"
                                     Style="{StaticResource CustomButtonStyle}"/>
                         </Grid>
                         
@@ -701,6 +719,59 @@
                                     Command="{Binding UpdateItemCommand}"
                                     Content="Update Quantity"
                                     Style="{StaticResource CustomButtonStyle}"/>
+                        </Grid>
+                        
+                        <Grid Grid.Row="3" Grid.Column="5" 
+                              HorizontalAlignment="Center" VerticalAlignment="Center">
+                            
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                        
+                            <Button Grid.Column="0"  x:Name="BtnRemove"
+                                    Command="{Binding RemoveItemCommand}"
+                                    Content="Check Item"
+                                    Style="{StaticResource CustomButtonStyle}"/>
+                            
+                            <Button Grid.Column="2" 
+                                    Command="{Binding DeleteItemCommand}"
+                                    x:Name="BtnDelete"
+                                    Style="{StaticResource MainButton}"
+                                    Background="#ffaeae"
+                                    BorderThickness="2">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Grid>
+                                            <Border x:Name="ButtonBorder" 
+                                                    Background="{TemplateBinding Background}"
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    CornerRadius="8">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="ButtonBorder" Property="Background" Value="#ffcaca"/>
+                                            </Trigger>
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter TargetName="ButtonBorder" Property="Background" Value="#ff9a9a"/>
+                                            </Trigger>
+                                            <DataTrigger Binding="{Binding RemoveValidData}" Value="False">
+                                                <Setter Property="IsEnabled" Value="False"/>
+                                                <Setter Property="Background" Value="#a4b1cd"/>
+                                            </DataTrigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                                <StackPanel Orientation="Vertical" Margin="10, 10">
+                                    <Image Source="/Images/trash.png" 
+                                           Width="18" Height="18"
+                                           RenderOptions.BitmapScalingMode="HighQuality"/>
+                                </StackPanel>
+                            </Button>
+
                         </Grid>
                     </Grid>
                     

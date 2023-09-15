@@ -23,6 +23,7 @@
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/product.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/stockflowlogo.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/time.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/trash.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/user.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/user_white.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/warehouse-blue.png")]

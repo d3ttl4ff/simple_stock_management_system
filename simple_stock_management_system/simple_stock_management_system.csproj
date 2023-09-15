@@ -120,7 +120,6 @@
         <Compile Include="Repositories\UserRepository.cs" />
         <Compile Include="ViewModels\LoginViewModel.cs" />
         <Compile Include="ViewModels\StockDatabaseModel.cs" />
-        <Compile Include="ViewModels\StockRemoveViewModel.cs" />
         <Compile Include="ViewModels\ViewModelBase.cs" />
         <Compile Include="ViewModels\ViewModelCommand.cs" />
         <Compile Include="View\DashboardView.xaml.cs">
@@ -220,6 +219,9 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <Content Include="Images\time.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Images\trash.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <Content Include="Images\user.png">

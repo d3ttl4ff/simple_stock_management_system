@@ -5,9 +5,9 @@ namespace simple_stock_management_system.Repositories {
     public abstract class RepositoryBase : IDisposable
     {
         protected readonly string ConnectionString = "server=localhost;user=root;database=main;port=3306;password=root";
-        private MySqlConnection _connection;
-        
-        public RepositoryBase()
+        private readonly MySqlConnection _connection;
+
+        protected RepositoryBase()
         {
             _connection = new MySqlConnection(ConnectionString);
         }
