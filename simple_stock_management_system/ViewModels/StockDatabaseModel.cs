@@ -7,6 +7,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using MySql.Data.MySqlClient;
 using simple_stock_management_system.Repositories;
+using simple_stock_management_system.Models;
 
 namespace simple_stock_management_system.ViewModels; 
 
@@ -216,8 +217,11 @@ public class StockDatabaseModel : ViewModelBase {
                 }
             }
 
+            // Create a new stock model object with the retrieved values from the properties
+            StockModel stockModel = new StockModel(itemId, stockCode, itemName, itemQuantity, currentDate, customNote);
+
             // Insert the values into the stock database
-            InsertIntoStockDatabase(itemId, stockCode, itemName, itemQuantity, currentDate, customNote);
+            InsertIntoStockDatabase(stockModel.Id, stockModel.StockCode, stockModel.ItemName, stockModel.ItemQuantity, stockModel.CurrentDate, stockModel.CustomNote);
 
             // Clear the properties after inserting the values into the database
             StockCode = "";
@@ -298,11 +302,6 @@ public class StockDatabaseModel : ViewModelBase {
             string removeStockCode = RemoveStockCode;
             
             GetDetailsFromDatabase(removeStockCode);
-            
-            RemoveItemName = "";
-            RemoveItemQuantity = 0;
-            RemoveCustomNote = ""; 
-            RemoveErrorMessage = "";
         }
         catch(MySqlException e) {
             RemoveErrorMessage =  "Error: " + e.Message;
