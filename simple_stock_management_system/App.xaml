@@ -497,7 +497,7 @@
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" TargetName="DGR_HeaderBorder" Value="#9fef00"/>
+                                <Setter Property="Background" TargetName="DGR_HeaderBorder" Value="#7dbb00"/>
                                 <Setter Property="Foreground" Value="#141d2b"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">

@@ -204,21 +204,21 @@
                                 <DataGridTextColumn Header="Item Name" Binding="{Binding LogDataItemName}" 
                                                     IsReadOnly="True" Width="*"/>
                                 <DataGridTextColumn Header="Transaction Type" Binding="{Binding LogDataType}" 
-                                                    IsReadOnly="True" Width="*">
+                                                    IsReadOnly="True" Width="*" FontWeight="Bold">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style TargetType="{x:Type TextBlock}">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding LogDataType}" Value="Item added">
-                                                    <Setter Property="Foreground" Value="Green" />
+                                                    <Setter Property="Foreground" Value="#154734" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding LogDataType}" Value="Item feleted">
-                                                    <Setter Property="Foreground" Value="Red" />
+                                                <DataTrigger Binding="{Binding LogDataType}" Value="Item deleted">
+                                                    <Setter Property="Foreground" Value="#ff3e3e" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding LogDataType}" Value="Quantity added">
-                                                    <Setter Property="Foreground" Value="Blue" />
+                                                    <Setter Property="Foreground" Value="#0086ff" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding LogDataType}" Value="Quantity removed">
-                                                    <Setter Property="Foreground" Value="Purple" />
+                                                    <Setter Property="Foreground" Value="#9f00ff" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>

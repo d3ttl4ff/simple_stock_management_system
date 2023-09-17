@@ -132,7 +132,14 @@ public class StockDatabaseModel : ViewModelBase {
                 _removeStockCode = value.Replace(" ", "").ToUpper();
 
                 StockModel stockModel = new StockModel(value);
-                GetDetailsFromDatabase(stockModel.RemoveStockCode);
+                if (GetDetailsFromDatabase(stockModel.RemoveStockCode)) {
+                    GetDetailsFromDatabase(stockModel.RemoveStockCode);
+                }
+                else {
+                    RemoveItemName = "";
+                    RemoveItemQuantity = 0;
+                    RemoveCustomNote = "";
+                }
                 
                 OnPropertyChanged(nameof(RemoveStockCode));
                 RemoveErrorMessage = "";
@@ -184,7 +191,14 @@ public class StockDatabaseModel : ViewModelBase {
                 
                 // Get the item name and quantity from the database
                 StockModel stockModel = new StockModel(value);
-                GetQuantityFromDatabase(stockModel.UpdateStockCode);
+                
+                if (GetQuantityFromDatabase(stockModel.UpdateStockCode)) {
+                    GetQuantityFromDatabase(stockModel.UpdateStockCode);
+                }
+                else {
+                    UpdateItemName = "";
+                    UpdateItemQuantity = 0;
+                }
                 
                 OnPropertyChanged(nameof(UpdateStockCode));
                 UpdateErrorMessage = "";
@@ -479,7 +493,9 @@ public class StockDatabaseModel : ViewModelBase {
         }
     }
     
-    private void GetDetailsFromDatabase(string stockCode) {
+    private bool GetDetailsFromDatabase(string stockCode) {
+        bool isSuccessful = false;
+        
         using (ConcreteRepository repository = new ConcreteRepository()) {
             string connectionString = repository.GetConnectionString();
             
@@ -509,12 +525,16 @@ public class StockDatabaseModel : ViewModelBase {
                                 
                                 RemoveErrorMessage = "";
                             }
+                            
+                            isSuccessful = true;
                         }
                     }
                 }
                 connection.Close();
             }
         }
+        
+        return isSuccessful;
     }
     
     private void RemoveItemFromDatabase(string stockCode) {
@@ -544,6 +564,7 @@ public class StockDatabaseModel : ViewModelBase {
                         RemoveStockCode = "";
                         RemoveItemName = "";
                         RemoveItemQuantity = 0;
+                        RemoveCustomNote = "";
                         RemoveErrorMessage = "";
                         
                         RemoveSuccessMessage = "* Item removed";
@@ -650,6 +671,18 @@ public class StockDatabaseModel : ViewModelBase {
                 
                 if (UpdateItemQuantity - newUpdateItemQuantity <= 0) {
                     RemoveItemFromDatabase(updateStockModel.UpdateStockCode);
+                    
+                    ItemId2 = Guid.NewGuid().ToString("D").ToCharArray();
+                    
+                    char[] itemId3 = ItemId2;
+                    string itemName2 = UpdateItemName;
+                    string type2 = "Item deleted";
+                    string quantityStats2 = "-";
+                    int newQuantity2 = 0;
+                    string currentDate2 = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+                    
+                    StockLog stockLog2 = new StockLog(itemId3, updateStockCode, itemName2, type2, quantityStats2, newQuantity2, currentDate2);
+                    InsertIntoLogDatabase(stockLog2.Id, stockLog2.LogDataStockCode, stockLog2.LogDataItemName, stockLog2.LogDataType, stockLog2.LogDataQuantityStats, stockLog2.LogDataNewQuantity, stockLog2.LogDataDate);
                 }
                 
                 UpdateItemName = "";
