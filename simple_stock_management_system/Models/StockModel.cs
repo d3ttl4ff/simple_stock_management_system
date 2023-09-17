@@ -1,14 +1,27 @@
-﻿using System;
-
-namespace simple_stock_management_system.Models; 
+﻿namespace simple_stock_management_system.Models; 
 
 public class StockModel {
-    public char[] Id { get; set; }
-    public string StockCode { get; set; }
-    public string ItemName { get; set; }
-    public int ItemQuantity { get; set; }
-    public string CurrentDate { get; set; }
-    public string CustomNote { get; set; }
+    public char[] Id { get;}
+    public string StockCode { get;}
+    public string ItemName { get;}
+    public int ItemQuantity { get;}
+    public string CurrentDate { get;}
+    public string CustomNote { get;}
+    public string UpdateStockCode { get;}
+    public int NewUpdateItemQuantity { get;}
+    public string RemoveStockCode { get;}
+    
+    
+    // Constructors (overloaded)
+    public StockModel(string newStockCode) {
+        UpdateStockCode = newStockCode;
+        RemoveStockCode = newStockCode;
+    }
+    
+    public StockModel(string newStockCode, int newQuantity) {
+        UpdateStockCode = newStockCode;
+        NewUpdateItemQuantity = newQuantity;
+    }
 
     public StockModel(char[] id, string stockCode, string itemName, int itemQuantity, string currentDate, string customNote) {
         Id = id;

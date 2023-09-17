@@ -20,7 +20,7 @@
     <Grid>
         <Border CornerRadius="12">
             <Border.Background>
-                <ImageBrush ImageSource="/Images/dots2.jpg"
+                <ImageBrush ImageSource="/Images/dots2-noise.jpg"
                             />
             </Border.Background>
             <Border CornerRadius="10" 
@@ -231,7 +231,7 @@
                                        FontSize="15"
                                        FontFamily="JetBrains Mono"
                                        HorizontalAlignment="Left"/>
-                            <TextBox Grid.Row="14" Grid.Column="0" Name="CustomNoteTextBox" Width="255" Height="60"
+                            <TextBox Grid.Row="14" Grid.Column="0" Name="CustomNoteTextBox" Width="255"
                                      Text="{Binding CustomNote, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource CustomTextBoxStyleFour}"/>
                         </Grid>
@@ -294,7 +294,7 @@
                                        FontSize="15"
                                        FontFamily="JetBrains Mono"
                                        HorizontalAlignment="Left"/>
-                            <TextBox Grid.Row="14" Grid.Column="0" Name="RemoveCustomNoteTextBox" Width="255" Height="60"
+                            <TextBox Grid.Row="14" Grid.Column="0" Name="RemoveCustomNoteTextBox" Width="255"
                                      Text="{Binding RemoveCustomNote, UpdateSourceTrigger=PropertyChanged}"
                                      IsReadOnly="True"
                                      Style="{StaticResource DisabledTextBoxStyle}"/>
@@ -353,7 +353,7 @@
                                      IsReadOnly="True"
                                      Style="{StaticResource DisabledTextBoxStyle}"/>
                         
-                            <TextBlock Grid.Row="12" Grid.Column="0" Text="Remove Quantity"
+                            <TextBlock Grid.Row="12" Grid.Column="0" Text="New Quantity"
                                        Foreground="#a4b1cd"
                                        FontSize="15"
                                        FontFamily="JetBrains Mono"
@@ -376,6 +376,28 @@
                             
                             <Border x:Name="SuccessMessageBorder" Opacity="{Binding ErrorMessageOpacity}">
                                 <TextBlock Text="{Binding SuccessMessage}"
+                                           TextWrapping="Wrap"
+                                           Foreground="#9fef00"
+                                           FontSize="12"
+                                           Width="255"
+                                           FontWeight="Light"
+                                           FontFamily="JetBrains Mono"/>
+                            </Border>
+                        </Grid>
+                        
+                        <Grid Grid.Row="1" Grid.Column="3">
+                            <Border x:Name="UpdateErrorMessageBorder" Opacity="{Binding ErrorMessageOpacity}">
+                                <TextBlock Text="{Binding UpdateErrorMessage}"
+                                           TextWrapping="Wrap"
+                                           Foreground="#ff3e3e"
+                                           FontSize="12"
+                                           Width="255"
+                                           FontWeight="Light"
+                                           FontFamily="JetBrains Mono"/>
+                            </Border>
+                            
+                            <Border x:Name="UpdateSuccessMessageBorder" Opacity="{Binding ErrorMessageOpacity}">
+                                <TextBlock Text="{Binding UpdateSuccessMessage}"
                                            TextWrapping="Wrap"
                                            Foreground="#9fef00"
                                            FontSize="12"
@@ -418,64 +440,31 @@
                         
                         <Grid Grid.Row="3" Grid.Column="3" 
                               HorizontalAlignment="Center" VerticalAlignment="Center">
+                            
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
                         
-                            <Button x:Name="BtnUpdate"
-                                    Command="{Binding UpdateItemCommand}"
-                                    Content="Update Quantity"
+                            <Button Grid.Column="0" x:Name="BtnRmvQty"
+                                    Command="{Binding AddItemQuantityCommand}"
+                                    Content="+ Qty"
                                     Style="{StaticResource CustomButtonStyle}"/>
+                            
+                            <Button Grid.Column="2" x:Name="BtnAddQty"
+                                    Command="{Binding RemoveItemQuantityCommand}"
+                                    Content="- Qty"
+                                    Style="{StaticResource CustomButtonStyle}"/>
+                            
                         </Grid>
                         
                         <Grid Grid.Row="3" Grid.Column="5" 
                               HorizontalAlignment="Center" VerticalAlignment="Center">
-                            
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="15"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                        
-                            <Button Grid.Column="0"  x:Name="BtnRemove"
+                            <Button  x:Name="BtnRemove"
                                     Command="{Binding RemoveItemCommand}"
-                                    Content="Check Item"
+                                    Content="Delete Item"
                                     Style="{StaticResource CustomButtonStyle}"/>
-                            
-                            <Button Grid.Column="2" 
-                                    Command="{Binding DeleteItemCommand}"
-                                    x:Name="BtnDelete"
-                                    Style="{StaticResource MainButton}"
-                                    Background="#ffaeae"
-                                    BorderThickness="2">
-                                <Button.Template>
-                                    <ControlTemplate TargetType="Button">
-                                        <Grid>
-                                            <Border x:Name="ButtonBorder" 
-                                                    Background="{TemplateBinding Background}"
-                                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                                    CornerRadius="8">
-                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                            </Border>
-                                        </Grid>
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter TargetName="ButtonBorder" Property="Background" Value="#ffcaca"/>
-                                            </Trigger>
-                                            <Trigger Property="IsPressed" Value="True">
-                                                <Setter TargetName="ButtonBorder" Property="Background" Value="#ff9a9a"/>
-                                            </Trigger>
-                                            <DataTrigger Binding="{Binding RemoveValidData}" Value="False">
-                                                <Setter Property="IsEnabled" Value="False"/>
-                                                <Setter Property="Background" Value="#a4b1cd"/>
-                                            </DataTrigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Button.Template>
-                                <StackPanel Orientation="Vertical" Margin="10, 10">
-                                    <Image Source="/Images/trash.png" 
-                                           Width="18" Height="18"
-                                           RenderOptions.BitmapScalingMode="HighQuality"/>
-                                </StackPanel>
-                            </Button>
-
                         </Grid>
                     </Grid>
                     

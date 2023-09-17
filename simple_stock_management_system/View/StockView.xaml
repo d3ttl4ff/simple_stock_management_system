@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:viewModel="clr-namespace:simple_stock_management_system.ViewModels"
         mc:Ignorable="d"
         Title="StockView" Height="915" Width="1437"
         WindowStyle="None"
@@ -12,37 +13,9 @@
         AllowsTransparency="True"
         MouseDown="Window_MouseDown">
     
-    <Window.Resources>
-        <Style x:Key="MainButton" TargetType="Button">
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Foreground" Value="#141d2b"/>
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="FontFamily" Value="JetBrains Mono"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Background" Value="#9fef00"/>
-            
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border CornerRadius="10"
-                                Background="{TemplateBinding Background}">
-                            <ContentPresenter VerticalAlignment="Center"
-                                              HorizontalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#ccff66"/>
-                </Trigger>
-                <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="#7dbb00"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-    </Window.Resources>
+    <Window.DataContext>
+        <viewModel:StockDatabaseModel/>
+    </Window.DataContext>
     
     <Grid>
         <Border CornerRadius="12">
@@ -71,7 +44,7 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="30"/>
-                        <RowDefinition Height="300"/>
+                        <RowDefinition Height="240"/>
                         <RowDefinition/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="25"/>
@@ -183,20 +156,29 @@
                                    Margin="0, 10, 0, 0"/>
                     </StackPanel>
                     
-                    <Grid Grid.Row="2" HorizontalAlignment="Center">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="20"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="30"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="30"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
+                    <Grid Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Top">
+                            <DataGrid x:Name="DataGrid" Width="900" Height="500"
+                                      RowStyle="{DynamicResource DataGridRowStyle1}" 
+                                      ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}"
+                                      CellStyle="{DynamicResource DataGridCellStyle1}"  
+                                      Style="{DynamicResource DataGridStyle1}"
+                                      FontFamily="Jetbrains Mono"
+                                      FontSize="12"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                                      ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Stock Code" Binding="{Binding DataStockCode}" 
+                                                        IsReadOnly="True" Width="150" FontWeight="Bold"/>
+                                    <DataGridTextColumn Header="Item Name" Binding="{Binding DataItemName}" 
+                                                        IsReadOnly="True" Width="200"/>
+                                    <DataGridTextColumn Header="Quantity" Binding="{Binding DataQuantity}" 
+                                                        IsReadOnly="True" Width="100" FontWeight="Bold"/>
+                                    <DataGridTextColumn Header="Date" Binding="{Binding DataDate}" 
+                                                        IsReadOnly="True" Width="150"/>
+                                    <DataGridTextColumn Header="Note" Binding="{Binding DataNote}" 
+                                                        IsReadOnly="True" Width="300"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
                     </Grid>
                     
                     <Grid Grid.Row="3" HorizontalAlignment="Right">

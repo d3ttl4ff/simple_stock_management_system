@@ -5,6 +5,10 @@ using System.Windows.Media.Animation;
 
 namespace simple_stock_management_system.View {
     public partial class MainView : Window {
+        private DashboardView _cachedDashboardView;
+        private LogView _cachedLogView;
+        private StockView _cachedStockView;
+        
         public MainView() {
             InitializeComponent();
         }
@@ -24,23 +28,23 @@ namespace simple_stock_management_system.View {
         }
 
         private void btnDashboard_Click(object sender, RoutedEventArgs e) {
-            DashboardView dashboardView = new DashboardView();
-            dashboardView.Opacity = 0;
-            dashboardView.Loaded += DashboardView_Loaded;
-            Visibility = Visibility.Hidden;
-            dashboardView.Show();
-        }
-
-        private void DashboardView_Loaded(object sender, RoutedEventArgs e) {
-            DashboardView dashboardView = (DashboardView)sender;
-
-            DoubleAnimation fadeInAnimation = new DoubleAnimation {
-                From = 0,
-                To = 1,
-                Duration = new Duration(TimeSpan.FromSeconds(0.2))
-            };
+            // DashboardView dashboardView = new DashboardView();
+            // dashboardView.Opacity = 0;
+            // dashboardView.Loaded += DashboardView_Loaded;
+            // Visibility = Visibility.Hidden;
+            // Close();
+            // dashboardView.Show();
             
-            dashboardView.BeginAnimation(OpacityProperty, fadeInAnimation);
+            if (_cachedDashboardView == null)
+            {
+                _cachedDashboardView = new DashboardView();
+                _cachedDashboardView.Loaded += DashboardView_Loaded;
+            }
+
+            _cachedDashboardView.Opacity = 0;
+            Visibility = Visibility.Hidden;
+            Close();
+            _cachedDashboardView.Show();
         }
 
         private void btnLog_Click(object sender, RoutedEventArgs e) {
@@ -49,18 +53,17 @@ namespace simple_stock_management_system.View {
             logView.Loaded += LogView_Loaded;
             Visibility = Visibility.Hidden;
             logView.Show();
-        }
-        
-        private void LogView_Loaded(object sender, RoutedEventArgs e) {
-            LogView logView = (LogView)sender;
-
-            DoubleAnimation fadeInAnimation = new DoubleAnimation {
-                From = 0,
-                To = 1,
-                Duration = new Duration(TimeSpan.FromSeconds(0.2))
-            };
             
-            logView.BeginAnimation(OpacityProperty, fadeInAnimation);
+            // if (_cachedLogView == null)
+            // {
+            //     _cachedLogView = new LogView();
+            //     _cachedLogView.Loaded += LogView_Loaded;
+            // }
+            //
+            // _cachedLogView.Opacity = 0;
+            // Visibility = Visibility.Hidden;
+            // Close();
+            // _cachedLogView.Show();
         }
 
         private void btnStock_Click(object sender, RoutedEventArgs e) {
@@ -69,6 +72,42 @@ namespace simple_stock_management_system.View {
             stockView.Loaded += StockView_Loaded;
             Visibility = Visibility.Hidden;
             stockView.Show();
+            
+            // if (_cachedStockView == null)
+            // {
+            //     _cachedStockView = new StockView();
+            //     _cachedStockView.Loaded += StockView_Loaded;
+            // }
+            //
+            // _cachedStockView.Opacity = 0;
+            // Visibility = Visibility.Hidden;
+            // Close();
+            // _cachedStockView.Show();
+        }
+        
+        //------------------------------------ animation for fade in 
+        private void DashboardView_Loaded(object sender, RoutedEventArgs e) {
+            DashboardView dashboardView = (DashboardView)sender;
+
+            DoubleAnimation fadeInAnimation = new DoubleAnimation {
+                From = 0,
+                To = 1,
+                Duration = new Duration(TimeSpan.FromSeconds(0.1))
+            };
+            
+            dashboardView.BeginAnimation(OpacityProperty, fadeInAnimation);
+        }
+        
+        private void LogView_Loaded(object sender, RoutedEventArgs e) {
+            LogView logView = (LogView)sender;
+
+            DoubleAnimation fadeInAnimation = new DoubleAnimation {
+                From = 0,
+                To = 1,
+                Duration = new Duration(TimeSpan.FromSeconds(0.1))
+            };
+            
+            logView.BeginAnimation(OpacityProperty, fadeInAnimation);
         }
 
         private void StockView_Loaded(object sender, RoutedEventArgs e) {
@@ -77,11 +116,13 @@ namespace simple_stock_management_system.View {
             DoubleAnimation fadeInAnimation = new DoubleAnimation {
                 From = 0,
                 To = 1,
-                Duration = new Duration(TimeSpan.FromSeconds(0.2))
+                Duration = new Duration(TimeSpan.FromSeconds(0.1))
             };
             
             stockView.BeginAnimation(OpacityProperty, fadeInAnimation);
         }
+        //------------------------------------ animation for fade in 
+        
     }
 }
 

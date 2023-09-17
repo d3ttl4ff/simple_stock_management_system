@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,19 +17,28 @@ public class StockDatabaseModel : ViewModelBase {
     
     //Fields
     private char[] _itemId;
+    private char[] _itemId2;
     private string _stockCode;
     private string _itemName;
     private int _itemQuantity;
-    string _customNote;
+    private string _customNote;
 
     private string _removeStockCode;
     private string _removeItemName;
     private int _removeItemQuantity;
-    string _removeCustomNote;
+    private string _removeCustomNote;
+    
+    private string _updateStockCode;
+    private string _updateItemName;
+    private int _updateItemQuantity;
+    private int _newUpdateItemQuantity;
     
     private string _errorMessage;
-    private string _removeErrorMessage;
     private string _successMessage;
+    private string _removeErrorMessage;
+    private string _removeSuccessMessage;
+    private string _updateErrorMessage;
+    private string _updateSuccessMessage;
     
     public int ErrorMessageOpacity { get; set; }
 
@@ -40,11 +51,33 @@ public class StockDatabaseModel : ViewModelBase {
         } 
     }
     
+    public char[] ItemId2 {
+        get => _itemId2;
+        set {
+            _itemId2 = value;
+            OnPropertyChanged(nameof(ItemId2));
+        } 
+    }
+    
     public string StockCode {
         get => _stockCode;
         set {
-            _stockCode = value.Replace(" ", "").ToUpper();
-            OnPropertyChanged(nameof(StockCode));
+            if (value.StartsWith("-") || value.StartsWith("_"))
+            {
+                ErrorMessage = "Error: Stock Code cannot start with a hyphen (-) or an underscore (_)";
+                ShowErrorMessageWithFadeIn();
+            }
+            else if (Regex.IsMatch(value, "^[a-zA-Z0-9_-]*$"))
+            {
+                _stockCode = value.Replace(" ", "").ToUpper();
+                OnPropertyChanged(nameof(StockCode));
+                ErrorMessage = "";
+            }
+            else
+            {
+                ErrorMessage = "Error: Stock Code can only contain letters, numbers, spaces, hyphens, and underscores";
+                ShowErrorMessageWithFadeIn();
+            }
         } 
     }
     
@@ -56,19 +89,20 @@ public class StockDatabaseModel : ViewModelBase {
                 ErrorMessage = "Error: Item Name cannot start with a hyphen (-) or an underscore (_)";
                 ShowErrorMessageWithFadeIn();
             }
-            else if (Regex.IsMatch(value, "^[a-zA-Z0-9_-]*$"))
+            else if (!value.Contains("~"))
             {
                 _itemName = value;
                 OnPropertyChanged(nameof(ItemName));
+                ErrorMessage = "";
             }
             else
             {
-                ErrorMessage = "Error: Item Name can only contain letters, numbers, spaces, hyphens, and underscores";
+                ErrorMessage = "Error: Item Name cannot contain a tilde (~)";
                 ShowErrorMessageWithFadeIn();
             }
         } 
     }
-    
+     
     public int ItemQuantity {
         get => _itemQuantity;
         set {
@@ -96,7 +130,11 @@ public class StockDatabaseModel : ViewModelBase {
             else if (Regex.IsMatch(value, "^[a-zA-Z0-9_-]*$"))
             {
                 _removeStockCode = value.Replace(" ", "").ToUpper();
-                OnPropertyChanged(nameof(ItemName));
+
+                StockModel stockModel = new StockModel(value);
+                GetDetailsFromDatabase(stockModel.RemoveStockCode);
+                
+                OnPropertyChanged(nameof(RemoveStockCode));
                 RemoveErrorMessage = "";
             }
             else
@@ -132,11 +170,70 @@ public class StockDatabaseModel : ViewModelBase {
         } 
     }
     
+    public string UpdateStockCode {
+        get => _updateStockCode;
+        set {
+            if (value.StartsWith("-") || value.StartsWith("_"))
+            {
+                UpdateErrorMessage = "Error: Stock Code cannot start with a hyphen (-) or an underscore (_)";
+                ShowUpdateErrorMessageWithFadeIn();
+            }
+            else if (Regex.IsMatch(value, "^[a-zA-Z0-9_-]*$"))
+            {
+                _updateStockCode = value.Replace(" ", "").ToUpper();
+                
+                // Get the item name and quantity from the database
+                StockModel stockModel = new StockModel(value);
+                GetQuantityFromDatabase(stockModel.UpdateStockCode);
+                
+                OnPropertyChanged(nameof(UpdateStockCode));
+                UpdateErrorMessage = "";
+            }
+            else
+            {
+                UpdateErrorMessage = "Error: Stock Code can only contain letters, numbers, spaces, hyphens, and underscores";
+                ShowUpdateErrorMessageWithFadeIn();
+            }
+        } 
+    }
+    
+    public string UpdateItemName {
+        get => _updateItemName;
+        set {
+            _updateItemName = value;
+            OnPropertyChanged(nameof(UpdateItemName));
+        } 
+    }
+    
+    public int UpdateItemQuantity {
+        get => _updateItemQuantity;
+        set {
+            _updateItemQuantity = value;
+            OnPropertyChanged(nameof(UpdateItemQuantity));
+        } 
+    }
+    
+    public int NewUpdateItemQuantity {
+        get => _newUpdateItemQuantity;
+        set {
+            _newUpdateItemQuantity = value;
+            OnPropertyChanged(nameof(NewUpdateItemQuantity));
+        } 
+    }
+    
     public string ErrorMessage {
         get => _errorMessage;
         set {
             _errorMessage = value;
             OnPropertyChanged(nameof(ErrorMessage));
+        }
+    }
+    
+    public string SuccessMessage {
+        get => _successMessage;
+        set {
+            _successMessage = value;
+            OnPropertyChanged(nameof(SuccessMessage));
         }
     }
     
@@ -148,27 +245,46 @@ public class StockDatabaseModel : ViewModelBase {
         }
     }
     
-    public string SuccessMessage {
-        get => _successMessage;
+    public string RemoveSuccessMessage {
+        get => _removeSuccessMessage;
         set {
-            _successMessage = value;
-            OnPropertyChanged(nameof(SuccessMessage));
+            _removeSuccessMessage = value;
+            OnPropertyChanged(nameof(RemoveSuccessMessage));
+        }
+    }
+    
+    public string UpdateErrorMessage {
+        get => _updateErrorMessage;
+        set {
+            _updateErrorMessage = value;
+            OnPropertyChanged(nameof(UpdateErrorMessage));
+        }
+    }
+    
+    public string UpdateSuccessMessage {
+        get => _updateSuccessMessage;
+        set {
+            _updateSuccessMessage = value;
+            OnPropertyChanged(nameof(UpdateSuccessMessage));
         }
     }
 
     //Commands
     public ICommand AddItemCommand { get; }
     public ICommand RemoveItemCommand { get; }
-    public ICommand DeleteItemCommand { get; }
+    public ICommand AddItemQuantityCommand { get; }
+    public ICommand RemoveItemQuantityCommand { get; }
     
     //Constructor
     public StockDatabaseModel() {
         AddItemCommand = new ViewModelCommand(ExecuteAddItemCommand);
         RemoveItemCommand = new ViewModelCommand(ExecuteRemoveItemCommand);
-        DeleteItemCommand = new ViewModelCommand(ExecuteDeleteItemCommand);
+        AddItemQuantityCommand = new ViewModelCommand(ExecuteAddQuantityCommand);
+        RemoveItemQuantityCommand = new ViewModelCommand(ExecuteRemoveQuantityCommand);
     }
     
     //Methods
+    //******************************** Add Item ********************************
     private void ExecuteAddItemCommand(object obj) {
 
         try {
@@ -198,6 +314,7 @@ public class StockDatabaseModel : ViewModelBase {
             
             // Generate a UUID for the item
             ItemId = Guid.NewGuid().ToString("D").ToCharArray();
+            ItemId2 = Guid.NewGuid().ToString("D").ToCharArray();
         
             // Retrieve values from properties
             char[] itemId = ItemId;
@@ -207,21 +324,18 @@ public class StockDatabaseModel : ViewModelBase {
             string customNote = CustomNote;
             string currentDate = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
             
-            using (ConcreteRepository repository = new ConcreteRepository())
-            {
-                string connectionString = repository.GetConnectionString();
-                
-                using (MySqlConnection connection = new MySqlConnection(connectionString))
-                {
-                    connection.Open();
-                }
-            }
+            char[] itemId2 = ItemId2;
+            string type = "Item added";
+            string quantityStats = "Added " + itemQuantity + " item(s)";
+            int newQuantity = itemQuantity;
 
-            // Create a new stock model object with the retrieved values from the properties
+            // Create a new stock model object with the retrieved values from the properties and insert the values into the stock table
             StockModel stockModel = new StockModel(itemId, stockCode, itemName, itemQuantity, currentDate, customNote);
-
-            // Insert the values into the stock database
             InsertIntoStockDatabase(stockModel.Id, stockModel.StockCode, stockModel.ItemName, stockModel.ItemQuantity, stockModel.CurrentDate, stockModel.CustomNote);
+            
+            // Create a new stock log object with the retrieved values from the properties and insert the values into the log table
+            StockLog stockLog = new StockLog(itemId2, stockCode, itemName, type, quantityStats, newQuantity, currentDate);
+            InsertIntoLogDatabase(stockLog.Id, stockLog.LogDataStockCode, stockLog.LogDataItemName, stockLog.LogDataType, stockLog.LogDataQuantityStats, stockLog.LogDataNewQuantity, stockLog.LogDataDate);
 
             // Clear the properties after inserting the values into the database
             StockCode = "";
@@ -281,11 +395,45 @@ public class StockDatabaseModel : ViewModelBase {
 
                     command.ExecuteNonQuery();
                 }
+                
                 connection.Close();
             }
         }
     }
     
+    private void InsertIntoLogDatabase(char[] itemId, string stockCode, string itemName, string type, string quantityStats, int newQuantity, string currentDate) {
+
+        using (ConcreteRepository repository = new ConcreteRepository()) {
+            string connectionString = repository.GetConnectionString();
+            
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string insertQuery =
+                    "INSERT INTO transaction_log (Id, StockCode, ItemName, Type, QuantityStats, NewQuantity, Date) VALUES (@item_id, @stock_code, @item_name, @type, @quantity_stats, @new_quantity, @current_date)";
+
+                using (MySqlCommand command = new MySqlCommand(insertQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@item_id", new string(itemId));
+                    command.Parameters.AddWithValue("@stock_code", stockCode);
+                    command.Parameters.AddWithValue("@item_name", itemName);
+                    command.Parameters.AddWithValue("@type", type);
+                    command.Parameters.AddWithValue("@quantity_stats", quantityStats ?? "");
+                    command.Parameters.AddWithValue("@new_quantity", newQuantity);
+                    command.Parameters.AddWithValue("@current_date", currentDate);
+
+                    command.ExecuteNonQuery();
+                }
+                
+                connection.Close();
+            }
+        }
+    }
+    
+    //******************************** Add Item ********************************
+    
+    //******************************** Remove Item ********************************
     private void ExecuteRemoveItemCommand(Object obj) {
         try {
             if (string.IsNullOrWhiteSpace(RemoveStockCode)) {
@@ -298,16 +446,30 @@ public class StockDatabaseModel : ViewModelBase {
                 ShowRemoveErrorMessageWithFadeIn();
                 return;
             }
+            RemoveErrorMessage = "";
             
+            ItemId2 = Guid.NewGuid().ToString("D").ToCharArray();
+            
+            // Retrieve values from properties
             string removeStockCode = RemoveStockCode;
             
-            GetDetailsFromDatabase(removeStockCode);
+            char[] itemId2 = ItemId2;
+            string itemName = RemoveItemName;
+            string type = "Item deleted";
+            string quantityStats = "-";
+            int newQuantity = 0;
+            string currentDate = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+            
+            // Create a new stock model object with the retrieved values from the properties
+            StockModel stockModel = new StockModel(removeStockCode);
+            
+            // Create a new stock log object with the retrieved values from the properties and insert the values into the log table
+            StockLog stockLog = new StockLog(itemId2, removeStockCode, itemName, type, quantityStats, newQuantity, currentDate);
+            InsertIntoLogDatabase(stockLog.Id, stockLog.LogDataStockCode, stockLog.LogDataItemName, stockLog.LogDataType, stockLog.LogDataQuantityStats, stockLog.LogDataNewQuantity, stockLog.LogDataDate);
+            
+            RemoveItemFromDatabase(stockModel.RemoveStockCode);
         }
-        catch(MySqlException e) {
-            RemoveErrorMessage =  "Error: " + e.Message;
-            ShowRemoveErrorMessageWithFadeIn();
-        }
-        catch(FormatException e) {
+        catch (MySqlException e) {
             RemoveErrorMessage =  "Error: " + e.Message;
             ShowRemoveErrorMessageWithFadeIn();
         }
@@ -344,16 +506,9 @@ public class StockDatabaseModel : ViewModelBase {
                                 RemoveItemName = itemName;
                                 RemoveItemQuantity = itemQuantity;
                                 RemoveCustomNote = customNote;
+                                
+                                RemoveErrorMessage = "";
                             }
-                        }
-                        else 
-                        {
-                            RemoveItemName = "";
-                            RemoveItemQuantity = 0;
-                            RemoveCustomNote = "";
-                            
-                            RemoveErrorMessage = "Error: No entry found in the database for the given stock code";
-                            ShowRemoveErrorMessageWithFadeIn();
                         }
                     }
                 }
@@ -362,35 +517,222 @@ public class StockDatabaseModel : ViewModelBase {
         }
     }
     
-    private void ExecuteDeleteItemCommand(Object obj) {
+    private void RemoveItemFromDatabase(string stockCode) {
+        using (ConcreteRepository repository = new ConcreteRepository()) {
+            string connectionString = repository.GetConnectionString();
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString)) {
+                connection.Open();
+
+                // Check if the stock code exists in the database
+                string checkQuery = "SELECT COUNT(*) FROM stock WHERE StockCode = @stockCode";
+                using (MySqlCommand checkCommand = new MySqlCommand(checkQuery, connection)) {
+                    checkCommand.Parameters.Add(new MySqlParameter("@stockCode", MySqlDbType.VarChar) { Value = stockCode });
+                    int count = Convert.ToInt32(checkCommand.ExecuteScalar());
+
+                    if (count == 0) {
+                        RemoveErrorMessage = "Error: No entry found in the database for the given stock code";
+                        ShowRemoveErrorMessageWithFadeIn();
+                        return;
+                    }
+
+                    string deleteQuery = "DELETE FROM stock WHERE StockCode = @stockCode";
+                    using (MySqlCommand deleteCommand = new MySqlCommand(deleteQuery, connection)) {
+                        deleteCommand.Parameters.Add(new MySqlParameter("@stockCode", MySqlDbType.VarChar) { Value = stockCode });
+                        deleteCommand.ExecuteNonQuery();
+                        
+                        RemoveStockCode = "";
+                        RemoveItemName = "";
+                        RemoveItemQuantity = 0;
+                        RemoveErrorMessage = "";
+                        
+                        RemoveSuccessMessage = "* Item removed";
+                        ShowRemoveSuccessMessageWithFadeIn();
+                    }
+                }
+                connection.Close();
+            }
+        }
+    }
+    //******************************** Remove Item ********************************
+    
+    //******************************** Update Quantity ********************************
+    private void ExecuteAddQuantityCommand(Object obj) {
+        // Retrieve values from properties and create a new stock model object 
+        string updateStockCode = UpdateStockCode;
+        StockModel stockModel = new StockModel(updateStockCode);
+
         try {
-            if (string.IsNullOrWhiteSpace(RemoveStockCode)) {
-                RemoveErrorMessage = "Error: Stock Code cannot be empty";
+            if (string.IsNullOrWhiteSpace(UpdateStockCode)) {
+                UpdateErrorMessage = "Error: Stock Code cannot be empty";
                 
-                RemoveItemName = "";
-                RemoveItemQuantity = 0;
-                RemoveCustomNote = "";  
-                
-                ShowRemoveErrorMessageWithFadeIn();
+                ShowUpdateErrorMessageWithFadeIn();
                 return;
             }
-            RemoveErrorMessage = "";
             
-            string removeStockCode = RemoveStockCode;
-        
-            RemoveItemFromDatabase(removeStockCode);
+            if (GetQuantityFromDatabase(stockModel.UpdateStockCode)) {
+                
+                ItemId2 = Guid.NewGuid().ToString("D").ToCharArray();
+                
+                // Retrieve values from properties
+                int newUpdateItemQuantity = NewUpdateItemQuantity;
+                
+                char[] itemId2 = ItemId2;
+                string itemName = UpdateItemName;
+                string type = "Quantity added";
+                string quantityStats = "Added " + newUpdateItemQuantity + " item(s)";
+                int newQuantity = UpdateItemQuantity + newUpdateItemQuantity;
+                string currentDate = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+                
+                // Create a new stock model object with the retrieved values from the properties and insert the values into the stock table
+                StockModel updateStockModel = new StockModel(updateStockCode, newUpdateItemQuantity);
+                AddQuantityInDatabase(updateStockModel.UpdateStockCode, updateStockModel.NewUpdateItemQuantity);
+            
+                // Create a new stock log object with the retrieved values from the properties and insert the values into the log table
+                StockLog stockLog = new StockLog(itemId2, updateStockCode, itemName, type, quantityStats, newQuantity, currentDate);
+                InsertIntoLogDatabase(stockLog.Id, stockLog.LogDataStockCode, stockLog.LogDataItemName, stockLog.LogDataType, stockLog.LogDataQuantityStats, stockLog.LogDataNewQuantity, stockLog.LogDataDate);
+                
+                UpdateItemName = "";
+                UpdateItemQuantity = 0;
+            }
+            else {
+                UpdateErrorMessage = "Error: No entry found in the database for the given stock code";
+                ShowUpdateErrorMessageWithFadeIn();
+                
+                UpdateItemName = "";
+                UpdateItemQuantity = 0;
+            }
+            
         }
         catch (MySqlException e) {
-            RemoveErrorMessage =  "Error: " + e.Message;
-            ShowRemoveErrorMessageWithFadeIn();
+            UpdateErrorMessage =  "Error: " + e.Message;
+            ShowUpdateErrorMessageWithFadeIn();
         }
         catch (Exception e) {
-            RemoveErrorMessage =  "Error: " + e.Message;
-            ShowRemoveErrorMessageWithFadeIn();
+            UpdateErrorMessage = "Error: " + e.Message;
+            ShowUpdateErrorMessageWithFadeIn();
         }
     }
     
-    private void RemoveItemFromDatabase(string stockCode) {
+    private void ExecuteRemoveQuantityCommand(Object obj) {
+        string updateStockCode = UpdateStockCode;
+        StockModel stockModel = new StockModel(updateStockCode);
+        
+        try {
+            if (string.IsNullOrWhiteSpace(UpdateStockCode)) {
+                UpdateErrorMessage = "Error: Stock Code cannot be empty";
+                
+                ShowUpdateErrorMessageWithFadeIn();
+                return;
+            }
+            
+            if (GetQuantityFromDatabase(stockModel.UpdateStockCode)) {
+                
+                ItemId2 = Guid.NewGuid().ToString("D").ToCharArray();
+                
+                // Retrieve values from properties
+                int newUpdateItemQuantity = NewUpdateItemQuantity;
+                
+                char[] itemId2 = ItemId2;
+                string itemName = UpdateItemName;
+                string type = "Quantity removed";
+                string quantityStats = "Removed " + newUpdateItemQuantity + " item(s)";
+                int newQuantity = UpdateItemQuantity - newUpdateItemQuantity;
+                string currentDate = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+                
+                // Create a new stock model object with the retrieved values from the properties and insert the values into the stock table
+                StockModel updateStockModel = new StockModel(updateStockCode, newUpdateItemQuantity);
+                RemoveQuantityInDatabase(updateStockModel.UpdateStockCode, updateStockModel.NewUpdateItemQuantity);
+                
+                // Create a new stock log object with the retrieved values from the properties and insert the values into the log table
+                StockLog stockLog = new StockLog(itemId2, updateStockCode, itemName, type, quantityStats, newQuantity, currentDate);
+                InsertIntoLogDatabase(stockLog.Id, stockLog.LogDataStockCode, stockLog.LogDataItemName, stockLog.LogDataType, stockLog.LogDataQuantityStats, stockLog.LogDataNewQuantity, stockLog.LogDataDate);
+                
+                if (UpdateItemQuantity - newUpdateItemQuantity <= 0) {
+                    RemoveItemFromDatabase(updateStockModel.UpdateStockCode);
+                }
+                
+                UpdateItemName = "";
+                UpdateItemQuantity = 0;
+            }
+            else {
+                UpdateErrorMessage = "Error: No entry found in the database for the given stock code";
+                ShowUpdateErrorMessageWithFadeIn();
+                
+                UpdateItemName = "";
+                UpdateItemQuantity = 0;
+            }
+        }
+        catch (MySqlException e) {
+            UpdateErrorMessage =  "Error: " + e.Message;
+            ShowUpdateErrorMessageWithFadeIn();
+        }
+        catch (Exception e) {
+            UpdateErrorMessage = "Error: " + e.Message;
+            ShowUpdateErrorMessageWithFadeIn();
+        }
+        
+    }
+    
+    private void AddQuantityInDatabase(string updateStockCode, int newQuantity) {
+        using (ConcreteRepository repository = new ConcreteRepository()) {
+            string connectionString = repository.GetConnectionString();
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString)) {
+                connection.Open();
+                int newQty = UpdateItemQuantity + newQuantity;
+
+                string query = "UPDATE stock SET Quantity = @newQuantity WHERE StockCode = @stockCode";
+                
+                using (MySqlCommand command = new MySqlCommand(query, connection)) {
+                    command.Parameters.Add(new MySqlParameter("@stockCode", MySqlDbType.VarChar) { Value = updateStockCode }); 
+                    command.Parameters.Add(new MySqlParameter("@newQuantity", MySqlDbType.Int32) { Value = newQty });
+                    
+                    command.ExecuteNonQuery();
+                    
+                    UpdateStockCode = "";
+                    NewUpdateItemQuantity = 0;
+                    
+                    UpdateSuccessMessage = "* Quantity added";
+                    ShowUpdateSuccessMessageWithFadeIn();
+                }
+                connection.Close();
+            }
+        }
+    }
+
+    private void RemoveQuantityInDatabase(string updateStockCode, int newQuantity) {
+        using (ConcreteRepository repository = new ConcreteRepository()) {
+            string connectionString = repository.GetConnectionString();
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString)) {
+                connection.Open();
+                
+                int newQty = UpdateItemQuantity - newQuantity;
+            
+                string query = "UPDATE stock SET Quantity = @newQuantity WHERE StockCode = @stockCode";
+            
+                using (MySqlCommand command = new MySqlCommand(query, connection)) {
+                    command.Parameters.Add(new MySqlParameter("@stockCode", MySqlDbType.VarChar) { Value = updateStockCode }); 
+                    command.Parameters.Add(new MySqlParameter("@newQuantity", MySqlDbType.Int32) { Value = newQty });
+                
+                    command.ExecuteNonQuery();
+                    
+                    UpdateStockCode = "";
+                    NewUpdateItemQuantity = 0;
+                    
+                    UpdateSuccessMessage = "* Quantity removed";
+                    ShowUpdateSuccessMessageWithFadeIn();
+                }
+                
+                connection.Close();
+            }
+        }
+    }
+
+    private bool GetQuantityFromDatabase(string stockCode) {
+        bool isSuccessful = false;
+        
         using (ConcreteRepository repository = new ConcreteRepository()) {
             string connectionString = repository.GetConnectionString();
             
@@ -398,30 +740,118 @@ public class StockDatabaseModel : ViewModelBase {
             {   
                 connection.Open();
 
-                string query = "DELETE FROM stock WHERE StockCode = @stockCode";
+                string query = "SELECT ItemName, Quantity FROM stock WHERE StockCode = @stockCode";
                 
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.Add(new MySqlParameter("@stockCode", MySqlDbType.VarChar) { Value = stockCode });
-                    command.ExecuteNonQuery();
+
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read()) 
+                            {
+                                string itemName = reader.GetString("ItemName");
+                                int itemQuantity = reader.GetInt32("Quantity");
+
+                                UpdateItemName = itemName;
+                                UpdateItemQuantity = itemQuantity;
+                                
+                                UpdateErrorMessage = "";
+                            }
+                            
+                            isSuccessful = true;
+                        }
+                    }
                 }
                 connection.Close();
             }
         }
+
+        return isSuccessful;
+    }
+    //******************************** Update Quantity ********************************
+    
+    //******************************** Load Data ********************************
+    public List<StockItem> LoadStockLevelData() {
+        List<StockItem> stockItems = new List<StockItem>();
+        
+        using (ConcreteRepository repository = new ConcreteRepository()) {
+            string connectionString = repository.GetConnectionString();
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString)) {
+                connection.Open();
+
+                string query = "SELECT * FROM stock";
+                MySqlCommand command = new MySqlCommand(query, connection);
+                MySqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read()) {
+                    StockItem stockItem = new StockItem();
+                    stockItem.DataStockCode = reader.GetString("StockCode");
+                    stockItem.DataItemName = reader.GetString("ItemName");
+                    stockItem.DataQuantity = reader.GetInt32("Quantity");
+                    stockItem.DataDate = reader.GetString("Date");
+                    stockItem.DataNote = reader.GetString("Note");
+
+                    stockItems.Add(stockItem);
+                }
+                reader.Close();
+            }
+        }
+        return stockItems;
     }
     
-    //Error message fade in animation
+    public List<StockLog> LoadStockLogData() {
+        List<StockLog> stockLogs = new List<StockLog>();
+        
+        using (ConcreteRepository repository = new ConcreteRepository()) {
+            string connectionString = repository.GetConnectionString();
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString)) {
+                connection.Open();
+
+                string query = "SELECT * FROM transaction_log";
+                MySqlCommand command = new MySqlCommand(query, connection);
+                MySqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read()) {
+                    StockLog stockLog = new StockLog();
+                    stockLog.LogDataStockCode = reader.GetString("StockCode");
+                    stockLog.LogDataItemName = reader.GetString("ItemName");
+                    stockLog.LogDataType = reader.GetString("Type");
+                    stockLog.LogDataQuantityStats = reader.GetString("QuantityStats");
+                    stockLog.LogDataNewQuantity = reader.GetInt32("NewQuantity");
+                    stockLog.LogDataDate = reader.GetString("Date");
+
+                    stockLogs.Add(stockLog);
+                }
+                reader.Close();
+            }
+        }
+        return stockLogs;
+    } 
+    
+    //******************************** Load Data ********************************
+    
+    //******************************** Error message animation ********************************
     private void ShowErrorMessageWithFadeIn()
     {
-        ShowMessageWithFadeIn("ErrorMessageBorder");
+        ShowErrorMessage("ErrorMessageBorder");
     }
 
     private void ShowRemoveErrorMessageWithFadeIn()
     {
-        ShowMessageWithFadeIn("RemoveErrorMessageBorder");
+        ShowErrorMessage("RemoveErrorMessageBorder");
     }
     
-    private void ShowMessageWithFadeIn(string borderName)
+    private void ShowUpdateErrorMessageWithFadeIn()
+    {
+        ShowErrorMessage("UpdateErrorMessageBorder");
+    }
+    
+    private void ShowErrorMessage(string borderName)
     {
         ErrorMessageOpacity = 0;
 
@@ -442,10 +872,25 @@ public class StockDatabaseModel : ViewModelBase {
     
     private void ShowSuccessMessageWithFadeIn()
     {
+        ShowSuccessMessage("SuccessMessageBorder");
+    }
+    
+    private void ShowRemoveSuccessMessageWithFadeIn()
+    {
+        ShowSuccessMessage("RemoveSuccessMessageBorder");
+    }
+    
+    private void ShowUpdateSuccessMessageWithFadeIn()
+    {
+        ShowSuccessMessage("UpdateSuccessMessageBorder");
+    }
+    
+    private void ShowSuccessMessage(string borderName)
+    {
         ErrorMessageOpacity = 0;
 
         if (Application.Current.MainWindow != null) {
-            if (Application.Current.MainWindow.FindName("SuccessMessageBorder") is Border border)
+            if (Application.Current.MainWindow.FindName(borderName) is Border border)
             {
                 var fadeInAnimation = new DoubleAnimation
                 {
@@ -479,4 +924,5 @@ public class StockDatabaseModel : ViewModelBase {
             }
         }
     }
+    //******************************** Error message animation ********************************
 }

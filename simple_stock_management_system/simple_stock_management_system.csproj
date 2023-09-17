@@ -113,6 +113,8 @@
           <DependentUpon>BindablePasswordBox.xaml</DependentUpon>
         </Compile>
         <Compile Include="Models\IUserRepository.cs" />
+        <Compile Include="Models\StockItem.cs" />
+        <Compile Include="Models\StockLog.cs" />
         <Compile Include="Models\StockModel.cs" />
         <Compile Include="Models\UserModel.cs" />
         <Compile Include="Repositories\ConcreteRepository.cs" />
@@ -185,6 +187,9 @@
       <Content Include="Images\cart-white.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
+      <Content Include="Images\dots2-noise.jpg">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
       <Content Include="Images\dots2.jpg">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
@@ -219,9 +224,6 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <Content Include="Images\time.png">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-      <Content Include="Images\trash.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <Content Include="Images\user.png">
