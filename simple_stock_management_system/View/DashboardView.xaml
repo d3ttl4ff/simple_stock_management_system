@@ -20,8 +20,7 @@
     <Grid>
         <Border CornerRadius="12">
             <Border.Background>
-                <ImageBrush ImageSource="/Images/dots2-noise.jpg"
-                            />
+                <ImageBrush ImageSource="/Images/dots2-noise.jpg"/>
             </Border.Background>
             <Border CornerRadius="10" 
                     BorderThickness="2"
@@ -162,6 +161,7 @@
                             <RowDefinition Height="30"/>
                             <RowDefinition Height="20"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="10"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         
@@ -465,6 +465,37 @@
                                     Command="{Binding RemoveItemCommand}"
                                     Content="Delete Item"
                                     Style="{StaticResource CustomButtonStyle}"/>
+                        </Grid>
+                        
+                        <Grid Grid.Row="5" Grid.Column="1" 
+                              HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock Text="Add Item"
+                                       Foreground="#a4b1cd"
+                                       FontSize="11"
+                                       FontWeight="Light"
+                                       FontFamily="JetBrains Mono"
+                                       HorizontalAlignment="Center"
+                                       Opacity="0.6"/>
+                        </Grid>
+                        <Grid Grid.Row="5" Grid.Column="3" 
+                              HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock Text="Modfify Quantity"
+                                       Foreground="#a4b1cd"
+                                       FontSize="11"
+                                       FontWeight="Light"
+                                       FontFamily="JetBrains Mono"
+                                       HorizontalAlignment="Center"
+                                       Opacity="0.6"/>
+                        </Grid>
+                        <Grid Grid.Row="5" Grid.Column="5" 
+                              HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock Text="Delete Item"
+                                       Foreground="#a4b1cd"
+                                       FontSize="11"
+                                       FontWeight="Light"
+                                       FontFamily="JetBrains Mono"
+                                       HorizontalAlignment="Center"
+                                       Opacity="0.6"/>
                         </Grid>
                     </Grid>
                     
