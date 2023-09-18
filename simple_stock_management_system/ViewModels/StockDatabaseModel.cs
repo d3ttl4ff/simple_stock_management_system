@@ -669,7 +669,7 @@ public class StockDatabaseModel : ViewModelBase {
                 StockLog stockLog = new StockLog(itemId2, updateStockCode, itemName, type, quantityStats, newQuantity, currentDate);
                 InsertIntoLogDatabase(stockLog.Id, stockLog.LogDataStockCode, stockLog.LogDataItemName, stockLog.LogDataType, stockLog.LogDataQuantityStats, stockLog.LogDataNewQuantity, stockLog.LogDataDate);
                 
-                if (UpdateItemQuantity - newUpdateItemQuantity <= 0) {
+                if (newQuantity <= 0) {
                     RemoveItemFromDatabase(updateStockModel.UpdateStockCode);
                     
                     ItemId2 = Guid.NewGuid().ToString("D").ToCharArray();
