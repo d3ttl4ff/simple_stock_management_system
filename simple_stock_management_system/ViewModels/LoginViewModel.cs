@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Principal;
 using System.Threading;
@@ -99,6 +100,22 @@ namespace simple_stock_management_system.ViewModels {
                 ShowErrorMessageWithFadeIn();
             }
         }
+        
+        // convert SecureString to plain text
+        private string ConvertToUnsecureString(SecureString securePassword) {
+            if (securePassword == null)
+                return string.Empty;
+
+            IntPtr unmanagedString = IntPtr.Zero;
+            try {
+                unmanagedString = Marshal.SecureStringToGlobalAllocUnicode(securePassword);
+                return Marshal.PtrToStringUni(unmanagedString);
+            }
+            finally {
+                Marshal.ZeroFreeGlobalAllocUnicode(unmanagedString);
+            }
+        }
+
         
         //Error message fade in animation
         private void ShowErrorMessageWithFadeIn()

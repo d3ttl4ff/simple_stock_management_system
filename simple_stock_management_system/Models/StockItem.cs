@@ -7,4 +7,6 @@ public class StockItem {
     public string DataDate { get; set; }
     public string DataNote { get; set; }
 
+    public StockItem(){} // default constructor
+    
 }

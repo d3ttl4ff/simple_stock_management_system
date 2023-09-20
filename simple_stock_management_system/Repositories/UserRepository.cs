@@ -21,7 +21,7 @@ namespace simple_stock_management_system.Repositories {
                 }
             return validUser;
         }
-
+        
         public void Add(UserModel userModel) {
             throw new System.NotImplementedException();
         }
