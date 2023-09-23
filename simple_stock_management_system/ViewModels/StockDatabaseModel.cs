@@ -229,8 +229,13 @@ public class StockDatabaseModel : ViewModelBase {
     public int NewUpdateItemQuantity {
         get => _newUpdateItemQuantity;
         set {
-            _newUpdateItemQuantity = value;
-            OnPropertyChanged(nameof(NewUpdateItemQuantity));
+            if (value >= 0) {
+                _newUpdateItemQuantity = value;
+                OnPropertyChanged(nameof(NewUpdateItemQuantity));
+            } else {
+                _newUpdateItemQuantity = 0;
+                OnPropertyChanged(nameof(NewUpdateItemQuantity));
+            }
         } 
     }
     
@@ -583,6 +588,12 @@ public class StockDatabaseModel : ViewModelBase {
         StockModel stockModel = new StockModel(updateStockCode);
 
         try {
+            if (NewUpdateItemQuantity <= 0 || !Regex.IsMatch(NewUpdateItemQuantity.ToString(), "^[0-9]+$")) {
+                UpdateErrorMessage = "Error: Item Quantity can only be a positive integer";
+                ShowUpdateErrorMessageWithFadeIn();
+                return;
+            }
+            
             if (string.IsNullOrWhiteSpace(UpdateStockCode)) {
                 UpdateErrorMessage = "Error: Stock Code cannot be empty";
                 
@@ -639,6 +650,12 @@ public class StockDatabaseModel : ViewModelBase {
         StockModel stockModel = new StockModel(updateStockCode);
         
         try {
+            if (NewUpdateItemQuantity <= 0 || !Regex.IsMatch(NewUpdateItemQuantity.ToString(), "^[0-9]+$")) {
+                UpdateErrorMessage = "Error: Item Quantity can only be a positive integer";
+                ShowUpdateErrorMessageWithFadeIn();
+                return;
+            }
+            
             if (string.IsNullOrWhiteSpace(UpdateStockCode)) {
                 UpdateErrorMessage = "Error: Stock Code cannot be empty";
                 
