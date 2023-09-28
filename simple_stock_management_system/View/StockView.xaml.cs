@@ -38,7 +38,7 @@ public partial class StockView : Window {
     private void BtnHome_OnClick(object sender, RoutedEventArgs e) {
         // MainView mainView = new MainView();
         // mainView.Opacity = 0;
-        // mainView.Loaded += MainView_Loaded;
+        // mainView.Loaded += MainView_Loaded;+
         // Visibility = Visibility.Hidden;
         // mainView.Show();
         
