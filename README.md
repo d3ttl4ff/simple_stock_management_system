@@ -31,10 +31,16 @@ Administrators have the ability to generate stock level reports. These reports p
 
 ```To start using StockFlow, follow these steps:
 1. Clone the repository to your local machine.
+
 2. Set up the MySQL database and import the necessary schema using the provided SQL script.
-3. Configure the database connection in the application code to ensure seamless interaction between the application and the database.
+
+3. Configure the database connection in the application code to ensure seamless interaction between 
+the application and the database.
+
 4. Compile and run the application.
+
 5. Log in as an administrator using your credentials.
+
 6. Begin managing your stock items, viewing transaction logs, and generating stock level reports.
 ```
 
