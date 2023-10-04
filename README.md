@@ -29,8 +29,12 @@ The user interface is designed with ease of use in mind. It provides a clean and
 ### `Stock Transactions Log`
 StockFlow maintains a comprehensive log of all stock-related transactions. Administrators can view this log to track changes, identify trends, and maintain transparency in stock management.
 
+![thumbnail_log](/thumbnails/stockflow_log.png)
+
 ### `Stock Levels Reports`
 Administrators have the ability to generate stock level reports. These reports provide a clear overview of the current stock status, helping with inventory planning and management.
+
+![thumbnail_log](/thumbnails/stockflow_stock.png)
 
 ## `Getting Started`
 
