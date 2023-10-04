@@ -2,7 +2,10 @@
 
 "`StockFlow`" is a simple stock management system built using `C#` and `MySQL`, designed to streamline stock recording and tracking processes in a warehouse or inventory management setting and to use the practices of Object Oriented Programming. This application is tailored for administrators to efficiently manage stock items, record transactions, and generate stock level reports.
 
-![stockflow_thumbnail](/thumbnails/stockflow_thumb_gif.gif)
+<div class="container">
+  <img src="/thumbnails/stockflow_thumb_gif.gif" alt="Stockflow Thumbnail" class="centered-image">
+</div>
+
 
 ## `Features`
 
