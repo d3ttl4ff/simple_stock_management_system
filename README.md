@@ -43,5 +43,3 @@ the application and the database.
 
 6. Begin managing your stock items, viewing transaction logs, and generating stock level reports.
 ```
-
-StockFlow simplifies the stock management process, offering a secure and efficient solution for warehouse administrators.
