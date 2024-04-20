@@ -1,4 +1,4 @@
-<p align="Center">
+<p align="center">
   <h1>
       StockFlow: Simple Stock Management System
   </h1>
