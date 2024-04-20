@@ -1,4 +1,9 @@
 # StockFlow: Simple Stock Management System
+<p align="left">
+  <a href="https://skillicons.dev">
+      <img src="https://skillicons.dev/icons?i=cs,myswl,rider&theme=dark" />
+  </a>
+</p>
 
 "`StockFlow`" is a simple stock management system built using `C#` and `MySQL`, designed to streamline stock recording and tracking processes in a warehouse or inventory management setting and to use the practices of Object Oriented Programming. This application is tailored for administrators to efficiently manage stock items, record transactions, and generate stock level reports.
 
@@ -9,7 +14,7 @@
 
 ## `Features`
 
-### User Authentication
+### `User Authentication`
 StockFlow prioritizes security by implementing user authentication. Upon launching the application, administrators are prompted to log in using their unique credentials. Only authorized administrators can access and utilize the system.
 
 ### `User-Friendly Interface`
