@@ -1,7 +1,7 @@
 # StockFlow: Simple Stock Management System
 <p align="left">
   <a href="https://skillicons.dev">
-      <img src="https://skillicons.dev/icons?i=cs,myswl,rider&theme=dark" />
+      <img src="https://skillicons.dev/icons?i=cs,mysql,rider&theme=dark" />
   </a>
 </p>
 
