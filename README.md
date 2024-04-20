@@ -1,5 +1,10 @@
-# StockFlow: Simple Stock Management System
-<p align="left">
+<p align="Center">
+  <h1>
+      StockFlow: Simple Stock Management System
+  </h1>
+</p>
+
+<p align="center">
   <a href="https://skillicons.dev">
       <img src="https://skillicons.dev/icons?i=cs,mysql,rider&theme=dark" />
   </a>
