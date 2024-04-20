@@ -1,8 +1,6 @@
-<p align="center">
-  <h1>
-      StockFlow: Simple Stock Management System
-  </h1>
-</p>
+<h1 align="center">
+  StockFlow: Simple Stock Management System
+</h1>
 
 <p align="center">
   <a href="https://skillicons.dev">
