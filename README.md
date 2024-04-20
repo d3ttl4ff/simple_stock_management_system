@@ -9,7 +9,7 @@
 
 ## `Features`
 
-### `User Authentication`
+### User Authentication
 StockFlow prioritizes security by implementing user authentication. Upon launching the application, administrators are prompted to log in using their unique credentials. Only authorized administrators can access and utilize the system.
 
 ### `User-Friendly Interface`
